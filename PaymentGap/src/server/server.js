@@ -6,6 +6,7 @@ import express from 'express';
 import cors  from 'cors';
 
 import authRouter from './routes/auth.js';
+import regionRouter from './routes/regionRoutes.js';
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use((req, res, next) => {
 
 
 app.use('/auth', authRouter);
+app.use('/regions', regionRouter);
 
 
 const PORT = process.env.PORT || 3000;
