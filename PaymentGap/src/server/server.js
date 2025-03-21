@@ -7,6 +7,11 @@ import cors  from 'cors';
 
 import authRouter from './routes/auth.js';
 import regionRouter from './routes/regionRoutes.js';
+import countryRouter from './routes/countryRoutes.js';
+import locationRouter from './routes/locationRoutes.js';
+import companyRouter from './routes/companyRoutes.js';
+import companyRegionRouter from './routes/companyRegionRoutes.js';
+import companyCountryRouter from './routes/companyCountryRoutes.js';
 
 const app = express();
 
@@ -22,7 +27,11 @@ app.use((req, res, next) => {
 
 app.use('/auth', authRouter);
 app.use('/regions', regionRouter);
-
+app.use('/countries', countryRouter);
+app.use('/locations', locationRouter);
+app.use('/companies', companyRouter);
+app.use('/companyRegions', companyRegionRouter);
+app.use('/companyCountries', companyCountryRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
