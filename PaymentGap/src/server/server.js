@@ -12,6 +12,7 @@ import locationRouter from './routes/locationRoutes.js';
 import companyRouter from './routes/companyRoutes.js';
 import companyRegionRouter from './routes/companyRegionRoutes.js';
 import companyCountryRouter from './routes/companyCountryRoutes.js';
+import departmentRouter from './routes/departmentRoutes.js';
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use('/locations', locationRouter);
 app.use('/companies', companyRouter);
 app.use('/companyRegions', companyRegionRouter);
 app.use('/companyCountries', companyCountryRouter);
+app.use('/departments', departmentRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
