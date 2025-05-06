@@ -14,6 +14,8 @@ import companyRegionRouter from './routes/companyRegionRoutes.js';
 import companyCountryRouter from './routes/companyCountryRoutes.js';
 import departmentRouter from './routes/departmentRoutes.js';
 import jobTtitleRouter from './routes/jobTitleRoutes.js';
+import salaryHistoryRouter from './routes/salaryHistoryRoutes.js';
+import companyEntityRouter from './routes/companyEntitiesRoutes.js';
 
 const app = express();
 
@@ -36,6 +38,8 @@ app.use('/companyRegions', companyRegionRouter);
 app.use('/companyCountries', companyCountryRouter);
 app.use('/departments', departmentRouter);
 app.use('/jobTitles', jobTtitleRouter);
+app.use('/salaryHistories', salaryHistoryRouter);
+app.use('/companyEntities', companyEntityRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
