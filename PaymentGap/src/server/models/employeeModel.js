@@ -50,37 +50,30 @@ export async function createEmployee(employee) {
 
 
 
-export async function updateEmployee(id, data) {
+export async function updateEmployee(id, employee) {
   const {
-    first_name, second_name, email, phone,
-    employment_date, id_job_title, salary,
-    gender, national_id, date_of_birth, nationality,
-    id_line_manager, id_compensation_manager, id_department
-  } = data;
+    first_name, second_name, email, phone, employment_date,
+    id_job_title, salary, gender, national_id, date_of_birth,
+    nationality, id_line_manager, id_compensation_manager, id_department
+  } = employee;
 
-  const conn = await pool.getConnection();
   try {
-    const formattedEmploymentDate = employment_date ? format(new Date(employment_date), 'yyyy-MM-dd') : null;
-    const formattedDob = date_of_birth ? format(new Date(date_of_birth), 'yyyy-MM-dd') : null;
-
+    const conn = await pool.getConnection();
     const result = await conn.query(
-      `UPDATE EMPLOYEES SET
-        first_name = ?, second_name = ?, email = ?, phone = ?,
-        employment_date = ?, id_job_title = ?, salary = ?,
-        gender = ?, national_id = ?, date_of_birth = ?, nationality = ?,
-        id_line_manager = ?, id_compensation_manager = ?, id_department = ?
-      WHERE id_employee = ?`,
-      [
-        first_name, second_name, email, phone,
-        formattedEmploymentDate, id_job_title, salary,
-        gender, national_id, formattedDob, nationality,
-        id_line_manager, id_compensation_manager, id_department,
-        id
-      ]
+      `UPDATE EMPLOYEES SET 
+        first_name = ?, second_name = ?, email = ?, phone = ?, employment_date = ?, 
+        id_job_title = ?, salary = ?, gender = ?, national_id = ?, date_of_birth = ?, 
+        nationality = ?, id_line_manager = ?, id_compensation_manager = ?, id_department = ?
+       WHERE id_employee = ?`,
+      [first_name, second_name, email, phone, employment_date,
+        id_job_title, salary, gender, national_id, date_of_birth,
+        nationality, id_line_manager, id_compensation_manager, id_department, id]
     );
-    return result.affectedRows;
-  } finally {
     conn.release();
+    return result.affectedRows > 0;
+  } catch (err) {
+    console.error("Error in updateEmployee:", err);
+    throw err;
   }
 }
 
