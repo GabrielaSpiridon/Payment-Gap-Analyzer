@@ -1,5 +1,4 @@
 import pool from '../db/connection.js';
-import { format } from 'date-fns';
 
 export async function getAllEmployees() {
   const conn = await pool.getConnection();
@@ -21,36 +20,34 @@ export async function getEmployeeById(id) {
   }
 }
 
-export async function createEmployee(employeeData) {
-  const connection = await pool.getConnection();
+
+export async function createEmployee(employee) {
+  const {
+    first_name, second_name, email, phone, employment_date,
+    id_job_title, salary, gender, national_id, date_of_birth,
+    nationality, id_line_manager, id_compensation_manager, id_department
+  } = employee;
+
   try {
-    const [result] = await connection.query(
-      `INSERT INTO EMPLOYEES (first_name, second_name, email, phone, employment_date, id_job_title, salary, gender, national_id, date_of_birth, nationality, id_line_manager, id_compensation_manager, id_department)
+    const conn = await pool.getConnection();
+    const result = await conn.query(
+      `INSERT INTO EMPLOYEES 
+        (first_name, second_name, email, phone, employment_date, 
+         id_job_title, salary, gender, national_id, date_of_birth, 
+         nationality, id_line_manager, id_compensation_manager, id_department)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        employeeData.first_name,
-        employeeData.second_name,
-        employeeData.email,
-        employeeData.phone,
-        employeeData.employment_date,
-        employeeData.id_job_title,
-        employeeData.salary,
-        employeeData.gender,
-        employeeData.national_id,
-        employeeData.date_of_birth,
-        employeeData.nationality,
-        employeeData.id_line_manager,
-        employeeData.id_compensation_manager,
-        employeeData.id_department
-      ]
+      [first_name, second_name, email, phone, employment_date,
+        id_job_title, salary, gender, national_id, date_of_birth,
+        nationality, id_line_manager, id_compensation_manager, id_department]
     );
-    return Number(result.insertId); 
+    conn.release();
+    return Number(result.insertId);
   } catch (err) {
+    console.error("Error in createEmployee:", err);
     throw err;
-  } finally {
-    connection.release();
   }
 }
+
 
 
 export async function updateEmployee(id, data) {

@@ -27,15 +27,15 @@ export async function getEmployee(req, res) {
 }
 
 export async function addEmployee(req, res) {
-  const employeeData = req.body;
   try {
-    const employeeId = await createEmployee(employeeData);
-    if (employeeId) res.json({ success: true, employeeId });
-    else res.status(500).json({ success: false, message: "Unable to create employee" });
-      } catch (err) {
+    const id = await createEmployee(req.body);
+    res.json({ success: true, id });
+  } catch (err) {
+    console.error("EROARE LA CREARE:", err);
     res.status(500).json({ success: false, message: "Error creating employee" });
   }
 }
+
 
 export async function editEmployee(req, res) {
   const { id } = req.params;
