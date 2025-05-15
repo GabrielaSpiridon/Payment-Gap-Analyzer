@@ -1,0 +1,61 @@
+import {
+    getAllUsers,
+    getUserById,
+    createUser,
+    updateUser,
+    deleteUser
+  } from '../models/userAccessModel.js';
+  
+  export async function getUsers(req, res) {
+    try {
+      const users = await getAllUsers();
+      res.json(users);
+    } catch (err) {
+      res.status(500).json({ success: false, message: "Error fetching users" });
+    }
+  }
+  
+  export async function getUser(req, res) {
+    const { id_user } = req.params;
+    try {
+      const user = await getUserById(id_user);
+      if (user) res.json(user);
+      else res.status(404).json({ success: false, message: "User not found" });
+    } catch (err) {
+      res.status(500).json({ success: false, message: "Error fetching user" });
+    }
+  }
+  
+  export async function addUser(req, res) {
+    const { username, password, role } = req.body;
+    try {
+      const userId = await createUser(username, password, role);
+      res.json({ success: true, userId });
+    } catch (err) {
+      res.status(500).json({ success: false, message: "Error creating user" });
+    }
+  }
+  
+  export async function editUser(req, res) {
+    const { id_user } = req.params;
+    const { username, password, role } = req.body;
+    try {
+      const isUpdated = await updateUser(id_user, username, password, role);
+      if (isUpdated) res.json({ success: true, message: "User updated successfully" });
+      else res.status(404).json({ success: false, message: "User not found" });
+    } catch (err) {
+      res.status(500).json({ success: false, message: "Error updating user" });
+    }
+  }
+  
+  export async function removeUser(req, res) {
+    const { id_user } = req.params;
+    try {
+      const isDeleted = await deleteUser(id_user);
+      if (isDeleted) res.json({ success: true, message: "User deleted successfully" });
+      else res.status(404).json({ success: false, message: "User not found" });
+    } catch (err) {
+      res.status(500).json({ success: false, message: "Error deleting user" });
+    }
+  }
+  
