@@ -17,7 +17,7 @@ import jobTtitleRouter from './routes/jobTitleRoutes.js';
 import salaryHistoryRouter from './routes/salaryHistoryRoutes.js';
 import companyEntityRouter from './routes/companyEntitiesRoutes.js';
 import employeeRouter from './routes/employeeRoutes.js';
-import userAccessRouter from '.routes/userAccessRoutes.js';
+import userAccessRouter from './routes/userAccessRoutes.js';
 
 const app = express();
 

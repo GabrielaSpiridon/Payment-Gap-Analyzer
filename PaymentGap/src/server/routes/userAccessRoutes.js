@@ -14,7 +14,7 @@ router.get('/getUsers', getUsers);
 
 
 //http://localhost:3000/userAccess/getUser/1
-router.get('/getUser/:id_user', getUser);
+router.get('/getUser/:id_user_access', getUser);
 
 
 //http://localhost:3000/userAccess/addUser

@@ -16,9 +16,9 @@ import {
   }
   
   export async function getUser(req, res) {
-    const { id_user } = req.params;
+    const { id_user_access } = req.params;
     try {
-      const user = await getUserById(id_user);
+      const user = await getUserById(id_user_access);
       if (user) res.json(user);
       else res.status(404).json({ success: false, message: "User not found" });
     } catch (err) {
@@ -27,9 +27,9 @@ import {
   }
   
   export async function addUser(req, res) {
-    const { username, password, role } = req.body;
+    const { id_user,id_country, id_region, id_company, id_department } = req.body;
     try {
-      const userId = await createUser(username, password, role);
+      const userId = await createUser(id_user,id_country, id_region, id_company, id_department);
       res.json({ success: true, userId });
     } catch (err) {
       res.status(500).json({ success: false, message: "Error creating user" });
@@ -37,10 +37,10 @@ import {
   }
   
   export async function editUser(req, res) {
-    const { id_user } = req.params;
-    const { username, password, role } = req.body;
+    const { id_user_access } = req.params;
+    const { id_user,id_country, id_region, id_company, id_department} = req.body;
     try {
-      const isUpdated = await updateUser(id_user, username, password, role);
+      const isUpdated = await updateUser(id_user_access,id_user,id_country, id_region, id_company, id_department);
       if (isUpdated) res.json({ success: true, message: "User updated successfully" });
       else res.status(404).json({ success: false, message: "User not found" });
     } catch (err) {
