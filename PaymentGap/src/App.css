@@ -1,84 +1,53 @@
+
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-
-.loginInputContainer {
-  background-color: rgb(255, 255, 255);
-  color: rgb(0, 0, 0);
-  border-width: 4px;
-  border-style: solid; 
-  border-color: rgb(237, 237, 237);
-  border-radius: 20px;
-  padding: 5px 10px;
-  cursor: pointer;
-  margin: 5px;
-  width: 250px;
-  text-align: center;
-}
-
-.loginLargeContainer {
+  height: 100vh;
   display: flex;
-  flex-direction: column; /* Stack elements vertically */
-  justify-content: center; /* Center vertically */
-  align-items: center; /* Center horizontally */
-  height: 40vh; /* Optional: Full viewport height */
-  border: 1px solid rgb(34, 255, 0); /* For visualization */
-  border-radius: 50px;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff; 
+  margin: 0;
+  padding: 0;
 }
 
-.loginButton{
-  background-color: rgb(0, 172, 0);
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 3px;
-  cursor: pointer;
-  margin: 5px;
-  width: 100px;
-  height: 40px;
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
 }
 
-.loginButton:hover {
-  background-color: #7eff80;
-  color: #ffffff;
+
+.login-title {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #0d6efd;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+
+.login-btn {
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+
+.forgot-link {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #0d6efd;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+
+.modal-body input {
+  margin-bottom: 1rem;
 }
