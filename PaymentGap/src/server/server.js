@@ -7,6 +7,7 @@ import cors  from 'cors';
 
 import authRouter from './routes/auth.js';
 import regionRouter from './routes/regionRoutes.js';
+
 import countryRouter from './routes/countryRoutes.js';
 import locationRouter from './routes/locationRoutes.js';
 import companyRouter from './routes/companyRoutes.js';
@@ -18,6 +19,8 @@ import salaryHistoryRouter from './routes/salaryHistoryRoutes.js';
 import companyEntityRouter from './routes/companyEntitiesRoutes.js';
 import employeeRouter from './routes/employeeRoutes.js';
 import userAccessRouter from './routes/userAccessRoutes.js';
+
+import uploadRouter from './routes/uploadRoutes.js';
 
 const app = express();
 
@@ -33,6 +36,7 @@ app.use((req, res, next) => {
 
 app.use('/auth', authRouter);
 app.use('/regions', regionRouter);
+
 app.use('/countries', countryRouter);
 app.use('/locations', locationRouter);
 app.use('/companies', companyRouter);
@@ -44,6 +48,8 @@ app.use('/salaryHistories', salaryHistoryRouter);
 app.use('/companyEntities', companyEntityRouter);
 app.use('/employees', employeeRouter);
 app.use('/userAccess',userAccessRouter);
+
+app.use('/uploadExcel', uploadRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
