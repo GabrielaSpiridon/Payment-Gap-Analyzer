@@ -21,23 +21,23 @@ function Dashboard() {
 
   const handleUpload = async () => {
     if (!file) {
-      setUploadStatus('Te rog selectează un fișier.');
+      setUploadStatus('Te rog selecteaza un fisier.');
       return;
     }
 
     const formData = new FormData();
-    formData.append('excel', file);
+    formData.append('file', file);
 
     try {
-      const response = await axios.post('http://localhost:3000/upload-excel', formData, {
+      const response = await axios.post('http://localhost:3000/uploadExcel/upload-excel', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-      setUploadStatus('Upload reușit! ' + response.data.message);
+      setUploadStatus('Upload reusit! ' + response.data.message);
     } catch (error) {
       console.error('Eroare la upload:', error);
-      setUploadStatus('Eroare la încărcare fișier.');
+      setUploadStatus('Eroare la incarcare fisier.');
     }
   };
 
