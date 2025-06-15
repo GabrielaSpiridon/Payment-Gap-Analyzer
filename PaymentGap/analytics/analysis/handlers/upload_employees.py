@@ -2,23 +2,36 @@ import pandas as pd
 
 def insert_employees(df, cursor):
     for _, row in df.iterrows():
-        id_employee = int(row['id_employee']) if 'id_employee' in df.columns and pd.notnull(row['id_employee']) else None
+        def safe_int(val):
+            return int(val) if pd.notnull(val) else None
+
+        def safe_float(val):
+            return float(val) if pd.notnull(val) else None
+
+        def safe_date(val):
+            if pd.notnull(val):
+                if isinstance(val, pd.Timestamp):
+                    return val.to_pydatetime().date()
+                return val  
+            return None
+
+        id_employee = safe_int(row['id_employee'])
 
         values = (
             row['first_name'],
             row['second_name'],
             row['email'],
             row['phone'],
-            row['employment_date'],
-            int(row['id_job_title']),
-            float(row['salary']),
+            safe_date(row['employment_date']),
+            safe_int(row['id_job_title']),
+            safe_float(row['salary']),
             row['gender'],
             row['national_id'],
-            row['date_of_birth'],
+            safe_date(row['date_of_birth']),
             row['nationality'],
-            int(row['id_line_manager']),
-            int(row['id_compensation_manager']),
-            int(row['id_department'])
+            safe_int(row['id_line_manager']),
+            safe_int(row['id_compensation_manager']),
+            safe_int(row['id_department'])
         )
 
         if id_employee is not None:

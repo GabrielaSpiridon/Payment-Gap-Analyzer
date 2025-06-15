@@ -1,8 +1,19 @@
 import pandas as pd
 
 def insert_job_title(df, cursor):
+    def safe_int(val):
+        return int(val) if pd.notnull(val) else None
+
+    def safe_float(val):
+        return float(val) if pd.notnull(val) else None
+
     for _, row in df.iterrows():
-        if 'id_job_title' in df.columns:
+        id_job_title = safe_int(row['id_job_title']) if 'id_job_title' in df.columns else None
+        id_department = safe_int(row['id_department'])
+        min_salary = safe_float(row['min_salary'])
+        max_salary = safe_float(row['max_salary'])
+
+        if id_job_title is not None:
             cursor.execute("""
                 INSERT INTO job_title (
                     id_job_title, job_title, id_department, min_salary, max_salary
@@ -13,11 +24,11 @@ def insert_job_title(df, cursor):
                     min_salary = VALUES(min_salary),
                     max_salary = VALUES(max_salary)
             """, (
-                int(row['id_job_title']),
+                id_job_title,
                 row['job_title'],
-                int(row['id_department']) if not pd.isna(row['id_department']) else None,
-                float(row['min_salary']) if not pd.isna(row['min_salary']) else None,
-                float(row['max_salary']) if not pd.isna(row['max_salary']) else None
+                id_department,
+                min_salary,
+                max_salary
             ))
         else:
             cursor.execute("""
@@ -26,8 +37,8 @@ def insert_job_title(df, cursor):
                 ) VALUES (%s, %s, %s, %s)
             """, (
                 row['job_title'],
-                int(row['id_department']) if not pd.isna(row['id_department']) else None,
-                float(row['min_salary']) if not pd.isna(row['min_salary']) else None,
-                float(row['max_salary']) if not pd.isna(row['max_salary']) else None
+                id_department,
+                min_salary,
+                max_salary
             ))
     return len(df)
