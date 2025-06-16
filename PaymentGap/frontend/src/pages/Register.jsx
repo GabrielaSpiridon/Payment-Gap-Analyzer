@@ -1,73 +1,66 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Box, Paper, Typography, TextField, MenuItem, Button } from '@mui/material';
+import { Password } from 'primereact/password';
 import axios from 'axios';
 
 function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('user');
+  const [role, setRole] = useState('hr');
   const navigate = useNavigate();
 
-  // Funcție pentru gestionarea trimiterii formularului
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const requestBody = {
-      username: username,
-      password: password,
-      role: role
-    };
-
     try {
-      const response = await axios.post('http://localhost:3000/auth/register', requestBody);
-      alert(`User registered successfully! User ID: ${response.data.userId}`);
-      navigate('/login'); // Redirecționează către login după înregistrare
+      const res = await axios.post('http://localhost:3000/auth/register', { username, password, role });
+      alert(`User registered successfully! User ID: ${res.data.userId}`);
+      navigate('/login');
     } catch (err) {
       alert(`Registration failed: ${err.message}`);
     }
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center vh-100">
-      <div className="card p-4" style={{ width: "100%", maxWidth: "400px" }}>
-        <h2 className="text-center mb-4">Register</h2>
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f5f5f5">
+      <Paper elevation={4} sx={{ p: 4, width: 400 }}>
+        <Typography variant="h5" mb={3} align="center">Înregistrare cont nou</Typography>
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <input 
-              type="text" 
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)} 
-              className="form-control"
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <input 
-              type="password" 
-              placeholder="Password"
+          <TextField
+            fullWidth
+            label="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            margin="normal"
+            required
+          />
+          <Box mt={2} mb={2}>
+            <Password
+              feedback={false}
+              toggleMask
               value={password}
-              onChange={(e) => setPassword(e.target.value)} 
-              className="form-control"
-              required
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Parolă"
+              className="w-full"
+              inputStyle={{ width: '100%' }}
             />
-          </div>
-          <div className="mb-3">
-            <select 
-              className="form-control"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-            >
-              <option value="admin">Admin</option>
-              <option value="hr">HR</option>
-              <option value="manager">Manager</option>
-            </select>
-          </div>
-          <button className="btn btn-primary w-100" type="submit">Register</button>
+          </Box>
+          <TextField
+            fullWidth
+            select
+            label="Rol"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            margin="normal"
+          >
+            <MenuItem value="admin">Admin</MenuItem>
+            <MenuItem value="hr">HR</MenuItem>
+            <MenuItem value="manager">Manager</MenuItem>
+          </TextField>
+          <Button fullWidth variant="contained" sx={{ mt: 2 }} type="submit">Înregistrează</Button>
         </form>
-      </div>
-    </div>
+      </Paper>
+    </Box>
   );
 }
 

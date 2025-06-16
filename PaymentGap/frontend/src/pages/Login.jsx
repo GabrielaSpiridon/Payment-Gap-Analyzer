@@ -1,139 +1,68 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
-import axios from "axios";
-import { Modal, Button } from "react-bootstrap";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Box, Button, TextField, Typography, Modal, Paper } from '@mui/material';
+import { Password } from 'primereact/password';
+import axios from 'axios';
 
 function Login({ onLoginSuccess }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [resetUsername, setResetUsername] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [resetUsername, setResetUsername] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/auth/login", {
-        username,
-        password,
-      });
-      if (response.data.success) {
-        localStorage.setItem("userId", response.data.userId);
+      const res = await axios.post('http://localhost:3000/auth/login', { username, password });
+      if (res.data.success) {
+        localStorage.setItem('userId', res.data.userId);
         onLoginSuccess();
-        navigate("/dashboard");
-      } else {
-        alert("Invalid credentials");
-      }
+        navigate('/dashboard');
+      } else alert('Invalid credentials');
     } catch (err) {
       alert(`Login failed: ${err.message}`);
     }
   };
 
   const handleResetPassword = async () => {
-    if (!resetUsername || !newPassword) {
-      alert("Please enter both username and new password");
-      return;
-    }
-
     try {
-      const response = await axios.post("http://localhost:3000/auth/reset-password", {
+      const res = await axios.post('http://localhost:3000/auth/reset-password', {
         username: resetUsername,
         newPassword: newPassword,
       });
-
-      if (response.data.success) {
-        alert("Password reset successful!");
-        setShowModal(false);
-      } else {
-        alert(response.data.message);
-      }
-    } catch (err) {
-      alert("Failed to reset password");
+      if (res.data.success) {
+        alert('Password reset successful!');
+        setOpen(false);
+      } else alert(res.data.message);
+    } catch {
+      alert('Reset failed');
     }
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light px-3">
-      <div className="w-100" style={{ maxWidth: "420px" }}>
-        <div className="card shadow-lg p-4 border-0 rounded-4">
-          <h3 className="text-center mb-4 fw-bold text-primary">Welcome Back</h3>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label className="form-label fw-semibold">Username</label>
-              <input
-                type="text"
-                placeholder="Enter your username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="form-control rounded-3"
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label fw-semibold">Password</label>
-              <input
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="form-control rounded-3"
-                required
-              />
-            </div>
-            <button className="btn btn-primary w-100 rounded-3 mb-2" type="submit">
-              Login
-            </button>
-            <button className="btn btn-outline-secondary w-100 rounded-3 mb-2" type="button" onClick={() => navigate("/register")}>
-              Register
-            </button>
-            <button className="btn btn-link w-100 text-center text-decoration-none mt-1" type="button" onClick={() => setShowModal(true)}>
-              Forgot Password?
-            </button>
-          </form>
-        </div>
-      </div>
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f5f5f5">
+      <Paper elevation={4} sx={{ p: 4, width: 400 }}>
+        <Typography variant="h5" mb={3} align="center">Autentificare</Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField fullWidth margin="normal" label="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+          <Password feedback={false} toggleMask value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" className="w-full" inputStyle={{ width: '100%' }} />
+          <Button fullWidth variant="contained" sx={{ mt: 2 }} type="submit">Login</Button>
+          <Button fullWidth variant="outlined" sx={{ mt: 1 }} onClick={() => navigate('/register')}>Register</Button>
+          <Button fullWidth variant="text" sx={{ mt: 1 }} onClick={() => setOpen(true)}>Forgot Password?</Button>
+        </form>
+      </Paper>
 
-      {/* Modal pentru resetarea parolei */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Reset Your Password</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="mb-3">
-            <label className="form-label">Username</label>
-            <input
-              type="text"
-              placeholder="Username"
-              value={resetUsername}
-              onChange={(e) => setResetUsername(e.target.value)}
-              className="form-control rounded-3"
-              required
-            />
-          </div>
-          <div>
-            <label className="form-label">New Password</label>
-            <input
-              type="password"
-              placeholder="New Password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="form-control rounded-3"
-              required
-            />
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleResetPassword}>
-            Reset Password
-          </Button>
-        </Modal.Footer>
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', p: 4, boxShadow: 24 }}>
+          <Typography variant="h6" mb={2}>Resetare parolă</Typography>
+          <TextField fullWidth label="Username" value={resetUsername} onChange={(e) => setResetUsername(e.target.value)} sx={{ mb: 2 }} />
+          <Password feedback={false} toggleMask value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Parolă nouă" className="w-full" inputStyle={{ width: '100%' }} />
+          <Button fullWidth variant="contained" sx={{ mt: 2 }} onClick={handleResetPassword}>Resetează</Button>
+        </Box>
       </Modal>
-    </div>
+    </Box>
   );
 }
 
