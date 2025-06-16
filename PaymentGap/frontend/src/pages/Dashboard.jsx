@@ -1,70 +1,187 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  Box,
+  Button,
+  Typography,
+  Paper,
+  Divider,
+  InputLabel,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  CircularProgress,
+  Alert,
+  Snackbar,
+  Alert as MuiAlert,
+} from '@mui/material';
+import { CheckCircle, Error as ErrorIcon } from '@mui/icons-material';
 import axios from 'axios';
 
 function Dashboard() {
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
-  const [file, setFile] = useState(null);
-  const [uploadStatus, setUploadStatus] = useState('');
+  const fullName = localStorage.getItem('fullName');
+
+  const [files, setFiles] = useState([]);
+  const [results, setResults] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
 
   useEffect(() => {
     if (!userId) {
-      console.log('No userId provided. Redirecting to login.');
       navigate('/login');
     }
   }, [userId, navigate]);
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    setFiles(Array.from(e.target.files));
+    setResults([]);
   };
 
   const handleUpload = async () => {
-    if (!file) {
-      setUploadStatus('Te rog selecteaza un fisier.');
-      return;
-    }
+    if (files.length === 0) return;
 
     const formData = new FormData();
-    formData.append('file', file);
+    files.forEach((file) => formData.append('files', file));
 
+    setUploading(true);
     try {
-      const response = await axios.post('http://localhost:3000/uploadExcel/upload-excel', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+      const res = await axios.post('http://localhost:8000/api/upload-excel/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
-      setUploadStatus('Upload reusit! ' + response.data.message);
-    } catch (error) {
-      console.error('Eroare la upload:', error);
-      setUploadStatus('Eroare la incarcare fisier.');
+
+      const responseResults = res.data.results || [];
+      setResults(responseResults);
+
+      const allSuccessful = responseResults.every((r) => r.status === 'success');
+      setSnackbar({
+        open: true,
+        message: allSuccessful ? 'All files uploaded successfully!' : 'Some files failed to upload.',
+        severity: allSuccessful ? 'success' : 'warning',
+      });
+    } catch (err) {
+      console.error('Upload error:', err);
+      setResults(files.map((f) => ({ fileName: f.name, status: 'failed', message: 'Server error' })));
+      setSnackbar({
+        open: true,
+        message: 'Upload failed due to server error.',
+        severity: 'error',
+      });
+    } finally {
+      setUploading(false);
     }
   };
 
+  const retryFailed = () => {
+    const failedFiles = files.filter((file) =>
+      results.find((r) => r.fileName === file.name && r.status === 'failed')
+    );
+    setFiles(failedFiles);
+    setResults([]);
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
   return (
-    <div className="container mt-5">
-      <h1>Dashboard</h1>
-      <p>Bine ai venit, utilizator ID: {userId}</p>
+    <Box sx={{ p: { xs: 2, md: 4 } }}>
+      <Paper elevation={3} sx={{ p: 4, maxWidth: 700, mx: 'auto', borderRadius: 3 }}>
+        <Typography variant="h4" mb={2} fontWeight="bold" color="primary">
+          Dashboard
+        </Typography>
+        <Typography variant="subtitle1" gutterBottom>
+          Welcome, {fullName || 'user'}!
+        </Typography>
 
-      <div className="mt-4">
-        <h4>Import Excel angajați</h4>
-        <input type="file" accept=".xlsx,.xls" onChange={handleFileChange} className="form-control" />
-        <button className="btn btn-primary mt-2" onClick={handleUpload}>Încarcă fișier</button>
-        {uploadStatus && <p className="mt-2">{uploadStatus}</p>}
-      </div>
+        <Divider sx={{ my: 3 }} />
 
-      <hr />
-      <button
-        className="btn btn-danger"
-        onClick={() => {
-          localStorage.removeItem('authenticated');
-          localStorage.removeItem('userId');
-          navigate('/login');
-        }}
+        <Typography variant="h6" mb={1}>
+          Import multiple Excel files
+        </Typography>
+
+        <InputLabel htmlFor="upload-excel" sx={{ mb: 1 }}>
+          Select one or more Excel files (.xlsx, .xls)
+        </InputLabel>
+        <input
+          multiple
+          type="file"
+          accept=".xlsx,.xls"
+          onChange={handleFileChange}
+          id="upload-excel"
+          style={{ marginBottom: '16px' }}
+        />
+
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleUpload}
+          disabled={uploading || files.length === 0}
+        >
+          {uploading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Upload files'}
+        </Button>
+
+        {results.length > 0 && (
+          <Box mt={3}>
+            <Typography variant="subtitle1" mb={1}>Upload results:</Typography>
+            <List dense>
+              {results.map((r, idx) => (
+                <ListItem key={idx}>
+                  <ListItemIcon>
+                    {r.status === 'success' ? (
+                      <CheckCircle color="success" />
+                    ) : (
+                      <ErrorIcon color="error" />
+                    )}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={r.fileName}
+                    secondary={r.status === 'success' ? 'Upload successful' : `Failed: ${r.message}`}
+                  />
+                </ListItem>
+              ))}
+            </List>
+
+            {results.some((r) => r.status === 'failed') && (
+              <Alert severity="warning" sx={{ mt: 2 }}>
+                Some files failed to upload. You can retry them.
+                <Button size="small" sx={{ ml: 2 }} onClick={retryFailed}>
+                  Retry failed
+                </Button>
+              </Alert>
+            )}
+          </Box>
+        )}
+
+        <Divider sx={{ my: 4 }} />
+
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={() => {
+            localStorage.removeItem('authenticated');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('fullName');
+            navigate('/login');
+          }}
+        >
+          Logout
+        </Button>
+      </Paper>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        Logout
-      </button>
-    </div>
+        <MuiAlert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </MuiAlert>
+      </Snackbar>
+    </Box>
   );
 }
 
