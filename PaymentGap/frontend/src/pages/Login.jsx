@@ -24,6 +24,7 @@ function Login({ onLoginSuccess }) {
       const res = await axios.post('http://localhost:3000/auth/login', { username, password });
       if (res.data.success) {
         localStorage.setItem('userId', res.data.userId);
+        localStorage.setItem('email', username);
         onLoginSuccess();
         navigate('/dashboard');
       } else {
@@ -79,7 +80,7 @@ function Login({ onLoginSuccess }) {
         <form onSubmit={handleSubmit}>
           <TextField
             fullWidth
-            label="Username"
+            label="Email"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             margin="normal"
@@ -130,7 +131,7 @@ function Login({ onLoginSuccess }) {
           </Typography>
           <TextField
             fullWidth
-            label="Username"
+            label="Email"
             value={resetUsername}
             onChange={(e) => setResetUsername(e.target.value)}
             sx={{ mb: 2 }}

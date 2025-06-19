@@ -3,7 +3,8 @@ import {
   getEmployeeById,
   createEmployee,
   updateEmployee,
-  deleteEmployee
+  deleteEmployee,
+  getEmployeeByEmail
 } from '../models/employeeModel.js';
 
 export async function getEmployees(req, res) {
@@ -59,3 +60,23 @@ export async function removeEmployee(req, res) {
     res.status(500).json({ success: false, message: "Error deleting employee" });
   }
 }
+
+export async function getEmployeeByEmailController(req, res) {
+  let { email } = req.query;
+  if (!email) {
+    return res.status(400).json({ success: false, message: "Email is required" });
+  }
+  email = email.trim(); 
+  try {
+    const employee = await getEmployeeByEmail(email);
+    if (employee) {
+      res.json(employee);
+    } else {
+      res.status(404).json({ success: false, message: "Employee not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Error fetching employee by email" });
+  }
+}
+
+

@@ -9,7 +9,7 @@ export const uploadExcel = async (req, res) => {
 
   try {
     const filePath = path.resolve(req.file.path);
-    const originalName = req.file.originalname; // 
+    const originalName = req.file.originalname; 
     const response = await forwardToDjango(filePath, originalName); 
 
     res.status(200).json({ message: 'Upload trimis la Django.', djangoResponse: response.data });

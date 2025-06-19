@@ -21,6 +21,7 @@
     "express": "^4.21.2",
     "mariadb": "^3.4.0",
     "multer": "^2.0.1",
+    "nodemailer": "^7.0.3",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.6",
     "react": "^19.0.0",

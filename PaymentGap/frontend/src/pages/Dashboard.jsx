@@ -22,7 +22,9 @@ import axios from 'axios';
 function Dashboard() {
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
-  const fullName = localStorage.getItem('fullName');
+  const email = localStorage.getItem('email');
+  const [employeeName, setEmployeeName] = useState('');
+  const [loadingName, setLoadingName] = useState(true);
 
   const [files, setFiles] = useState([]);
   const [results, setResults] = useState([]);
@@ -34,6 +36,29 @@ function Dashboard() {
       navigate('/login');
     }
   }, [userId, navigate]);
+
+  useEffect(() => {
+    async function fetchName() {
+      if (!email) {
+        setEmployeeName('');
+        setLoadingName(false);
+        return;
+      }
+      try {
+        const res = await axios.get(`http://localhost:3000/employees/getEmployeeByEmail?email=${encodeURIComponent(email)}`);
+        if (res.data && res.data.first_name && res.data.second_name) {
+          setEmployeeName(`${res.data.first_name} ${res.data.second_name}`);
+        } else {
+          setEmployeeName(email);
+        }
+      } catch (err) {
+        setEmployeeName(email);
+      } finally {
+        setLoadingName(false);
+      }
+    }
+    fetchName();
+  }, [email]);
 
   const handleFileChange = (e) => {
     setFiles(Array.from(e.target.files));
@@ -93,7 +118,7 @@ function Dashboard() {
           Dashboard
         </Typography>
         <Typography variant="subtitle1" gutterBottom>
-          Welcome, {fullName || 'user'}!
+          {loadingName ? "Loading..." : <>Welcome, <b>{employeeName || email}</b>!</>}
         </Typography>
 
         <Divider sx={{ my: 3 }} />

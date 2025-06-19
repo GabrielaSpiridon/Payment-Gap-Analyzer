@@ -5,7 +5,8 @@
 import express from 'express';
 import cors  from 'cors';
 
-import authRouter from './routes/auth.js';
+import auth from './routes/auth.js';
+import otpRouter from './routes/otpRoutes.js';
 import regionRouter from './routes/regionRoutes.js';
 
 import countryRouter from './routes/countryRoutes.js';
@@ -34,8 +35,9 @@ app.use((req, res, next) => {
 });
 
 
-app.use('/auth', authRouter);
+app.use('/auth', auth);
 app.use('/regions', regionRouter);
+app.use('/otp', otpRouter);
 
 app.use('/countries', countryRouter);
 app.use('/locations', locationRouter);

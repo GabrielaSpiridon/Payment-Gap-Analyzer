@@ -1,5 +1,5 @@
 // Import the necessary functions from the user model.
-import { getUserByUsernameAndPassword, createUser, deleteUserById, updateUserPassword  } from '../models/userModel.js';
+import { getUserByUsernameAndPassword, createUser, deleteUserById, updateUserPassword  } from '../models/authModel.js';
 
 /**
  * Handle user login.

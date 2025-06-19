@@ -46,11 +46,11 @@ function Register() {
         <form onSubmit={handleSubmit}>
           <TextField
             fullWidth
-            label="Username"
+            label="Email"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             margin="normal"
-            required
+            //required
           />
           <Box mt={2} mb={2}>
             <Box sx={{ width: '100%' }}>

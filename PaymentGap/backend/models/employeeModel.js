@@ -48,6 +48,18 @@ export async function createEmployee(employee) {
   }
 }
 
+export async function getEmployeeByEmail(email) {
+  const conn = await pool.getConnection();
+  try {
+    const rows = await conn.query(
+      'SELECT first_name, second_name FROM EMPLOYEES WHERE email = ? LIMIT 1',
+      [email]
+    );
+    return rows.length > 0 ? rows[0] : null;
+  } finally {
+    conn.release();
+  }
+}
 
 
 export async function updateEmployee(id, employee) {
