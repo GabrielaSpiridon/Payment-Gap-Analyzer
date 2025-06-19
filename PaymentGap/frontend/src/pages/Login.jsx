@@ -1,54 +1,114 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, TextField, Typography, Modal, Paper } from '@mui/material';
+import { Box, Button, TextField, Typography, Modal, Paper, Alert } from '@mui/material';
 import { Password } from 'primereact/password';
-import { Toast } from 'primereact/toast';
 import axios from 'axios';
 
 function Login({ onLoginSuccess }) {
+  const [step, setStep] = useState('login'); // 'login' or 'otp'
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [otp, setOtp] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [resetUsername, setResetUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [open, setOpen] = useState(false);
+
+  // Timer for resend OTP
+  const [timer, setTimer] = useState(15); // 3 minutes
+  const [canResend, setCanResend] = useState(false);
+
   const navigate = useNavigate();
-  const toast = useRef(null);
 
-  const showToast = (severity, summary, detail) => {
-    toast.current?.show({ severity, summary, detail, life: 3000 });
-  };
+  // Timer effect
+  useEffect(() => {
+    if (step === 'otp' && timer > 0) {
+      const interval = setInterval(() => {
+        setTimer((t) => t - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+    if (timer <= 0) setCanResend(true);
+  }, [step, timer]);
 
+  // Reset timer when entering OTP step
+  useEffect(() => {
+    if (step === 'otp') {
+      setTimer(15);
+      setCanResend(false);
+    }
+  }, [step]);
+
+  // LOGIN with 2FA
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
     try {
-      const res = await axios.post('http://localhost:3000/auth/login', { username, password });
-      if (res.data.success) {
-        localStorage.setItem('userId', res.data.userId);
-        localStorage.setItem('email', username);
-        onLoginSuccess();
-        navigate('/dashboard');
+      const res = await axios.post('http://localhost:3000/otp/login', { username, password });
+      if (res.data.success && res.data.step === 'otp') {
+        setStep('otp');
+        setSuccess('Check your email! We sent you a code.');
       } else {
-        showToast('error', 'Login failed', 'Invalid credentials');
+        setError('Invalid credentials');
       }
     } catch (err) {
-      showToast('error', 'Login error', err.message);
+      setError(err.response?.data?.message || 'Login error');
     }
   };
 
+  // OTP validation
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    try {
+      const res = await axios.post('http://localhost:3000/otp/verify-otp', { username, code: otp });
+      if (res.data.success) {
+        localStorage.setItem('userId', res.data.userId);
+        localStorage.setItem('email', username);
+        if (onLoginSuccess) onLoginSuccess();
+        navigate('/dashboard');
+      } else {
+        setError(res.data.message || 'Incorrect authentication code');
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'OTP validation error');
+    }
+  };
+
+  // RESEND OTP
+  const handleResendCode = async () => {
+    setError('');
+    setSuccess('');
+    setTimer(15); 
+    setCanResend(false);
+    try {
+      await axios.post('http://localhost:3000/otp/login', { username, password });
+      setSuccess('A new code has been sent to your email!');
+    } catch {
+      setError('Failed to resend code.');
+    }
+  };
+
+  // RESET PASSWORD
   const handleResetPassword = async () => {
+    setError('');
+    setSuccess('');
     try {
       const res = await axios.post('http://localhost:3000/auth/reset-password', {
         username: resetUsername,
         newPassword: newPassword,
       });
       if (res.data.success) {
-        showToast('success', 'Success', 'Password has been reset');
+        setSuccess('Password has been reset');
         setOpen(false);
       } else {
-        showToast('error', 'Reset failed', res.data.message);
+        setError(res.data.message || 'Reset failed');
       }
     } catch {
-      showToast('error', 'Reset error', 'Server error');
+      setError('Server error');
     }
   };
 
@@ -63,7 +123,6 @@ function Login({ onLoginSuccess }) {
         px: 2,
       }}
     >
-      <Toast ref={toast} />
       <Paper
         elevation={6}
         sx={{
@@ -72,43 +131,109 @@ function Login({ onLoginSuccess }) {
           width: '100%',
           maxWidth: 420,
           mx: 'auto',
+          position: 'relative'
         }}
       >
+        {/* Alert super vizibil */}
+        {error && (
+          <Alert
+            severity="error"
+            sx={{
+              mb: 2,
+              fontSize: '1.1rem',
+              fontWeight: 'bold',
+              border: '2px solid #c62828',
+              background: '#ffebee',
+              color: '#b71c1c',
+              boxShadow: '0 4px 16px rgba(198, 40, 40, 0.12)'
+            }}
+          >
+            {error}
+          </Alert>
+        )}
+        {success && (
+          <Alert
+            severity="success"
+            sx={{
+              mb: 2,
+              fontSize: '1.1rem',
+              fontWeight: 'bold',
+              border: '2px solid #2e7d32',
+              background: '#e8f5e9',
+              color: '#1b5e20',
+              boxShadow: '0 4px 16px rgba(46, 125, 50, 0.12)'
+            }}
+          >
+            {success}
+          </Alert>
+        )}
+
         <Typography variant="h5" mb={3} align="center" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
-          Login
+          {step === 'login' ? 'Login' : 'Enter authentication code'}
         </Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            fullWidth
-            label="Email"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            margin="normal"
-            required
-          />
-          <Box mt={2} mb={1}>
-            <Box sx={{ width: '100%' }}>
-              <Password
-                feedback={false}
-                toggleMask
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                inputStyle={{ width: '100%', padding: '16.5px 14px' }}
-                style={{ width: '100%' }}
-              />
+
+        {step === 'login' ? (
+          <form onSubmit={handleSubmit}>
+            <TextField
+              fullWidth
+              label="Email"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              margin="normal"
+              required
+            />
+            <Box mt={2} mb={1}>
+              <Box sx={{ width: '100%' }}>
+                <Password
+                  feedback={false}
+                  toggleMask
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                  inputStyle={{ width: '100%', padding: '16.5px 14px' }}
+                  style={{ width: '100%' }}
+                />
+              </Box>
             </Box>
-          </Box>
-          <Button fullWidth variant="contained" sx={{ mt: 2 }} type="submit">
-            Login
-          </Button>
-          <Button fullWidth variant="outlined" sx={{ mt: 1 }} onClick={() => navigate('/register')}>
-            Don't have an account? Register
-          </Button>
-          <Button fullWidth variant="text" sx={{ mt: 1 }} onClick={() => setOpen(true)}>
-            Forgot your password?
-          </Button>
-        </form>
+            <Button fullWidth variant="contained" sx={{ mt: 2 }} type="submit">
+              Login
+            </Button>
+            <Button fullWidth variant="outlined" sx={{ mt: 1 }} onClick={() => navigate('/register')}>
+              Don't have an account? Register
+            </Button>
+            <Button fullWidth variant="text" sx={{ mt: 1 }} onClick={() => setOpen(true)}>
+              Forgot your password?
+            </Button>
+          </form>
+        ) : (
+          <form onSubmit={handleVerifyOtp}>
+            <Typography variant="body2" mb={2}>
+              We sent a code to your email address. Please enter it below:
+            </Typography>
+            <TextField
+              fullWidth
+              label="Authentification Code"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              margin="normal"
+              required
+            />
+            <Button fullWidth variant="contained" sx={{ mt: 2 }} type="submit">
+              Verify Authentification Code
+            </Button>
+            <Box mt={2} display="flex" alignItems="center" justifyContent="center">
+              {!canResend ? (
+                <Typography variant="body2" color="text.secondary">
+                  You can resend the code in <b>{timer}</b> seconds.
+                </Typography>
+              ) : (
+                <Button variant="outlined" onClick={handleResendCode}>
+                  Resend code
+                </Button>
+              )}
+            </Box>
+          </form>
+        )}
       </Paper>
 
       <Modal open={open} onClose={() => setOpen(false)}>

@@ -24,8 +24,8 @@ async function sendEmailOTP(to, otp) {
   await transporter.sendMail({
     from: '"Payment Gap" <gabriela.spiridon2003@gmail.com>',
     to,
-    subject: "Cod de autentificare",
-    text: `Codul tău de autentificare este: ${otp}`,
+    subject: "Authentication Code",
+    text: `Your authentication code is: ${otp}`,
   });
 }
 
