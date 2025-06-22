@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import { CheckCircle, Error as ErrorIcon } from '@mui/icons-material';
 import axios from 'axios';
+import GenderPieChart from '../components/GenderPieChart'; 
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -181,6 +182,8 @@ function Dashboard() {
         )}
 
         <Divider sx={{ my: 4 }} />
+        
+        <GenderPieChart />
 
         <Button
           variant="outlined"
@@ -206,7 +209,9 @@ function Dashboard() {
           {snackbar.message}
         </MuiAlert>
       </Snackbar>
+    
     </Box>
+    
   );
 }
 
