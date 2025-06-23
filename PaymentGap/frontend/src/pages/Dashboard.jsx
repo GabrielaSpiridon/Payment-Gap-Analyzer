@@ -20,6 +20,7 @@ import { CheckCircle, Error as ErrorIcon } from '@mui/icons-material';
 import axios from 'axios';
 import GenderPieChart from '../components/GenderPieChart'; 
 import SalaryGenderDepartmentBarChart from '../components/SalaryGenderDepartmentBarChart';
+import SalaryYearLineChart from '../components/SalaryYearLineChart';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -187,6 +188,8 @@ function Dashboard() {
         <GenderPieChart />
 
         <SalaryGenderDepartmentBarChart />
+
+        <SalaryYearLineChart />
         
         <Button
           variant="outlined"
