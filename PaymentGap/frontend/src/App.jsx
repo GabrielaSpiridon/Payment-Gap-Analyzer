@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Navbar from './components/Navbar'; 
+import ImportExcelPage from './pages/ImportExcelPage';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -37,6 +38,7 @@ function App() {
           <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login onLoginSuccess={handleLoginSuccess} />} />
           <Route path="/register" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Register />} />
           <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
+          <Route path="/import" element={isAuthenticated ? <ImportExcelPage /> : <Navigate to="/login" />} />
         </Routes>
       </Box>
     </Router>

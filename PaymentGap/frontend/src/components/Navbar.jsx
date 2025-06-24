@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -12,6 +11,16 @@ function Navbar({ isAuthenticated, onLogout }) {
         </Typography>
 
         <Box>
+          {isAuthenticated && (
+            <>
+              <Button component={Link} to="/import" color="primary" variant="outlined" sx={{ mr: 1 }}>
+                Import Excel
+              </Button>
+              <Button component={Link} to="/employees" color="primary" variant="outlined" sx={{ mr: 1 }}>
+                Employees
+              </Button>
+            </>
+          )}
           {!isAuthenticated ? (
             <>
               <Button component={Link} to="/login" color="primary" variant="outlined" sx={{ mr: 1 }}>
