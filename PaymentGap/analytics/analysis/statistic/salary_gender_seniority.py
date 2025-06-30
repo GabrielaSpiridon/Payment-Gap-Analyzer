@@ -4,7 +4,6 @@ from django.db.models.functions import ExtractYear
 from analysis.models.employee import Employee
 
 def get_salary_by_gender_seniority():
-    # Bins pentru vechime
     bins = [
         (0, 2, '0-2 years'),
         (2, 5, '2-5 years'),
@@ -14,7 +13,6 @@ def get_salary_by_gender_seniority():
 
     current_year = date.today().year
 
-    
     employees = Employee.objects.exclude(salary__isnull=True)\
         .exclude(gender__isnull=True)\
         .exclude(employment_date__isnull=True)\
@@ -35,3 +33,6 @@ def get_salary_by_gender_seniority():
             'Total': float(total) if total is not None else None,
         })
     return results
+
+
+
