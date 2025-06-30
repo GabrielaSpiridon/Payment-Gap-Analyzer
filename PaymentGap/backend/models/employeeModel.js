@@ -3,12 +3,21 @@ import pool from '../db/connection.js';
 export async function getAllEmployees() {
   const conn = await pool.getConnection();
   try {
-    const rows = await conn.query('SELECT * FROM EMPLOYEES');
+    const rows = await conn.query(`
+      SELECT e.*, 
+             d.department_name, 
+             j.job_title
+      FROM EMPLOYEES e
+      LEFT JOIN COMPANY_ENTITIES ce ON e.id_department = ce.id_company_entity
+      LEFT JOIN DEPARTMENTS d ON ce.id_department = d.id_department
+      LEFT JOIN JOB_TITLE j ON e.id_job_title = j.id_job_title
+    `);
     return rows;
   } finally {
     conn.release();
   }
 }
+
 
 export async function getEmployeeById(id) {
   const conn = await pool.getConnection();
