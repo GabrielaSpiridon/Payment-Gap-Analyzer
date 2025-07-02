@@ -50,7 +50,7 @@ function Register() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             margin="normal"
-            //required
+            required
           />
           <Box mt={2} mb={2}>
             <Box sx={{ width: '100%' }}>
@@ -62,6 +62,7 @@ function Register() {
                 placeholder="Password"
                 inputStyle={{ width: '100%', padding: '16.5px 14px' }}
                 style={{ width: '100%' }}
+                required
               />
             </Box>
           </Box>
@@ -72,6 +73,7 @@ function Register() {
             value={role}
             onChange={(e) => setRole(e.target.value)}
             margin="normal"
+            required
           >
             <MenuItem value="admin">Admin</MenuItem>
             <MenuItem value="hr">HR</MenuItem>

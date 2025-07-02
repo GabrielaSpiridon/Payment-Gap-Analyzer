@@ -212,14 +212,14 @@ function Login({ onLoginSuccess }) {
             </Typography>
             <TextField
               fullWidth
-              label="Authentification Code"
+              label="Authentication Code"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
               margin="normal"
               required
             />
             <Button fullWidth variant="contained" sx={{ mt: 2 }} type="submit">
-              Verify Authentification Code
+              Verify Authentication Code
             </Button>
             <Box mt={2} display="flex" alignItems="center" justifyContent="center">
               {!canResend ? (
@@ -260,6 +260,7 @@ function Login({ onLoginSuccess }) {
             value={resetUsername}
             onChange={(e) => setResetUsername(e.target.value)}
             sx={{ mb: 2 }}
+            required
           />
           <Password
             feedback={false}
@@ -270,6 +271,7 @@ function Login({ onLoginSuccess }) {
             className="w-full"
             inputStyle={{ width: '100%', padding: '16.5px 14px' }}
             style={{ width: '100%' }}
+            required
           />
           <Button fullWidth variant="contained" sx={{ mt: 2 }} onClick={handleResetPassword}>
             Reset

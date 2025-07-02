@@ -1,12 +1,6 @@
-// Import the necessary functions from the user model.
 import { getUserByUsernameAndPassword, createUser, deleteUserById, updateUserPassword  } from '../models/authModel.js';
 
-/**
- * Handle user login.
- * Expects `req.body` to contain `username` and `password`.
- * If the user exists and the credentials match, return the user ID.
- * Otherwise, return a 404 with "unknown user".
- */
+
 export async function login(req, res) {
   const { username, password} = req.body;
 
@@ -26,12 +20,7 @@ export async function login(req, res) {
   }
 }
 
-/**
- * Handle user registration.
- * Expects `req.body` to contain `username`, `password`, and `role`.
- * Attempts to create a new user in the database and returns the new user's ID if successful.
- * On error, returns a 500 with "unable to create user".
- */
+
 export async function register(req, res) {
   const { username, password, role} = req.body;
 
@@ -51,14 +40,6 @@ export async function register(req, res) {
     return res.status(500).send("unable to create user");
   }
 }
-
-/**
- * Handle user deletion.
- * Expects `req.params` to contain `id_user`.
- * Attempts to delete the user from the database and returns a success message if successful.
- * On error, returns a 500 with "unable to delete user".
- */
-
 
 export async function deleteUser(req, res) {
   const { id_user } = req.params;

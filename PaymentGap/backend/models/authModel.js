@@ -1,14 +1,24 @@
 import pool from '../db/connection.js';
+import bcrypt from 'bcrypt';
 
 export async function getUserByUsernameAndPassword(username, password) {
   try {
     const conn = await pool.getConnection();
     try {
       const rows = await conn.query(
-        "SELECT id_user, username, role FROM USERS WHERE username = ? AND password = ? LIMIT 1",
-        [username, password]
+        "SELECT id_user, username, password, role FROM USERS WHERE username = ? LIMIT 1",
+        [username]
       );
-      return rows.length > 0 ? rows[0] : null;
+
+      if (rows.length > 0) {
+        const user = rows[0];
+        const match = await bcrypt.compare(password, user.password);
+        if (match) {
+          // Password matches, return user details without password
+          return { id_user: user.id_user, username: user.username, role: user.role };
+        }
+      }
+      return null;
     } finally {
       if (conn) conn.release();
     }
@@ -22,14 +32,15 @@ export async function createUser(username, password, role) {
   try {
     const conn = await pool.getConnection();
     try {
+      const hashedPassword = await bcrypt.hash(password, 10);
       const result = await conn.query(
         "INSERT INTO USERS(username, password, role) VALUES(?,?,?)",
-        [username, password, role]
+        [username, hashedPassword, role]
       );
       return result.insertId || null;
     } catch (err) {
       if (err.code === 'ER_DUP_ENTRY') {
-        console.error("Duplicate username:", err);
+        console.error("Duplicate email:", err);
         return null;
       } else {
         console.error("Error in createUser:", err);
@@ -66,9 +77,10 @@ export async function updateUserPassword(username, newPassword) {
   try {
     const conn = await pool.getConnection();
     try {
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
       const result = await conn.query(
         "UPDATE USERS SET password = ? WHERE username = ?",
-        [newPassword, username]
+        [hashedPassword, username]
       );
       return result.affectedRows > 0;
     } finally {
