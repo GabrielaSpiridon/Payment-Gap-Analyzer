@@ -1,5 +1,5 @@
 import { getUserByUsernameAndPassword, createUser, deleteUserById, updateUserPassword  } from '../models/authModel.js';
-
+import { sendPasswordChangeConfirmation } from '../controllers/otpController.js';
 
 export async function login(req, res) {
   const { username, password} = req.body;
@@ -75,6 +75,7 @@ export async function resetPassword(req, res) {
   try {
     const isUpdated = await updateUserPassword(username, newPassword);
     if (isUpdated) {
+       await sendPasswordChangeConfirmation(username);
       return res.json({ success: true, message: "Password updated successfully" });
     } else {
       return res.status(404).json({ success: false, message: "User not found" });
