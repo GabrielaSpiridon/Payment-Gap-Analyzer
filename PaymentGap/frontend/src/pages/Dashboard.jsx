@@ -24,6 +24,7 @@ import SalaryYearLineChart from '../components/SalaryYearLineChart';
 import SalaryGenderSeniorityBarChart from '../components/SalaryGenderSeniorityBarChart';
 import AgeBarChart from '../components/AgeBarChart'; 
 import SalaryTrendByMonth from '../components/SalaryTrendByMonth'; 
+import WorkforceCompositionChart from '../components/WorkforceCompositionChart'; // Assuming you have this component
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -81,8 +82,10 @@ function Dashboard() {
 
         <Divider sx={{ my: 4 }} />
         
+        <WorkforceCompositionChart />
+
         <SalaryTrendByMonth />
-        
+
         <AgeBarChart />
 
         <SalaryGenderSeniorityBarChart />
