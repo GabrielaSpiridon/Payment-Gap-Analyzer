@@ -6,7 +6,7 @@ from analysis.statistic.salary_gender_seniority import get_salary_by_gender_seni
 from analysis.statistic.age_distribution import get_age_distribution
 from analysis.statistic.salary_by_month_gender import get_salary_by_month_gender
 from analysis.statistic.workforce_composition import get_workforce_composition
-
+from analysis.statistic.salary_by_gender_job_title import get_salary_by_gender_job_title
 
 def gender_distribution_api(request):
     data = get_gender_distribution()
@@ -34,4 +34,8 @@ def salary_by_month_api(request):
 
 def workforce_composition_api(request):
     data = get_workforce_composition()
+    return JsonResponse(data, safe=False)
+
+def salary_by_gender_job_title_api(request):
+    data = get_salary_by_gender_job_title()
     return JsonResponse(data, safe=False)

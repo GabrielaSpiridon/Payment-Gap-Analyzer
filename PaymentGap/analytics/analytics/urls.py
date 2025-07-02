@@ -8,6 +8,7 @@ from analysis.views.dashboard import salary_gender_seniority_api
 from analysis.views.dashboard import age_distribution_api
 from analysis.views.dashboard import salary_by_month_api
 from analysis.views.dashboard import workforce_composition_api
+from analysis.views.dashboard import salary_by_gender_job_title_api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -19,4 +20,5 @@ urlpatterns = [
     path('api/age-distribution/', age_distribution_api),
     path('api/salary-by-month/', salary_by_month_api),
     path('api/workforce-composition/', workforce_composition_api),
+    path('api/salary-by-gender-job-title/', salary_by_gender_job_title_api)
 ]
