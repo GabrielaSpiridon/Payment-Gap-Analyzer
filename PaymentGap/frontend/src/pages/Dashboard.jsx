@@ -22,6 +22,8 @@ import GenderPieChart from '../components/GenderPieChart';
 import SalaryGenderDepartmentBarChart from '../components/SalaryGenderDepartmentBarChart';
 import SalaryYearLineChart from '../components/SalaryYearLineChart';
 import SalaryGenderSeniorityBarChart from '../components/SalaryGenderSeniorityBarChart';
+import AgeBarChart from '../components/AgeBarChart'; 
+import SalaryTrendByMonth from '../components/SalaryTrendByMonth'; 
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -79,6 +81,10 @@ function Dashboard() {
 
         <Divider sx={{ my: 4 }} />
         
+        <SalaryTrendByMonth />
+        
+        <AgeBarChart />
+
         <SalaryGenderSeniorityBarChart />
 
         <GenderPieChart />

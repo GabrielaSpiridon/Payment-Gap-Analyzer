@@ -13,6 +13,9 @@ function Navbar({ isAuthenticated, onLogout }) {
         <Box>
           {isAuthenticated && (
             <>
+            <Button component={Link} to="/dashboard" color="primary" variant="outlined" sx={{ mr: 1 }}>
+                Dashboard
+              </Button>
               <Button component={Link} to="/import" color="primary" variant="outlined" sx={{ mr: 1 }}>
                 Import Excel
               </Button>

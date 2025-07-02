@@ -5,6 +5,8 @@ from analysis.views.dashboard import gender_distribution_api
 from analysis.views.dashboard import salary_gender_department_api
 from analysis.views.dashboard import salary_by_year_api
 from analysis.views.dashboard import salary_gender_seniority_api
+from analysis.views.dashboard import age_distribution_api
+from analysis.views.dashboard import salary_by_month_api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -12,5 +14,7 @@ urlpatterns = [
     path('api/gender-distribution/', gender_distribution_api),
     path('api/salary-gender-department/', salary_gender_department_api),
     path('api/salary-by-year/', salary_by_year_api),
-     path('api/salary-gender-seniority/', salary_gender_seniority_api),
+    path('api/salary-gender-seniority/', salary_gender_seniority_api),
+    path('api/age-distribution/', age_distribution_api),
+    path('api/salary-by-month/', salary_by_month_api),
 ]

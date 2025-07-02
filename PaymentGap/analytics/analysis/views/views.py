@@ -26,7 +26,7 @@ def upload_excel(request):
         cursor = conn.cursor()
 
         for file_obj in files:
-            table_name = file_obj._name.split('.')[0].lower()
+            table_name = file_obj._name.split('.')[0].lower()  # considering the table name is derived from the file name
             try:
                 df = pd.read_excel(file_obj)
 

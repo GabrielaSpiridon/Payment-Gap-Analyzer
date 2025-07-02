@@ -52,10 +52,10 @@ export async function verifyOTP(req, res) {
   }
   if (new Date(otpData.expires_at) < new Date()) {
     await deleteOtp(username);
-    return res.status(400).json({ success: false, message: "Code expired" });
+    return res.status(400).json({ success: false, message: "Expired code" });
   }
   if (otpData.code !== code) {
-    return res.status(400).json({ success: false, message: "Code incorrect" });
+    return res.status(400).json({ success: false, message: "Incorrect code" });
   }
   await deleteOtp(username);
   res.json({ success: true, userId: username }); 
