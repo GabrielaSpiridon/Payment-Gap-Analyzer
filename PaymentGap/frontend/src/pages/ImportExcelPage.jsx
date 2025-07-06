@@ -51,8 +51,17 @@ function ImportExcelPage() {
         severity: allSuccessful ? 'success' : 'warning',
       });
     } catch (err) {
-      setResults(files.map((f) => ({ fileName: f.name, status: 'failed', message: 'Server error' })));
-      setSnackbar({
+      let responseResults = [];
+      if (err.response && err.response.data && err.response.data.results) {
+         responseResults = err.response.data.results;
+       } else {
+          responseResults = files.map((f) => ({
+            fileName: f.name,
+            status: 'failed',
+            message: 'Network or server error'
+        }));
+      }
+     setResults(responseResults);setSnackbar({
         open: true,
         message: 'Upload failed due to a server error.',
         severity: 'error',
