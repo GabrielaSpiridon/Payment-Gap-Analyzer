@@ -29,13 +29,14 @@ function Register() {
 
   return (
     <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="100vh"
       sx={{
-        background: 'linear-gradient(to right, #e3f2fd, #cfd8dc)',
-        px: 2,
+        minHeight: '100vh',
+        /* fundal radial gradient spre margini */
+        background: 'radial-gradient(circle at center, #ffffff 0%, #e3f2fd 60%)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        px: 2
       }}
     >
       <Toast ref={toast} />

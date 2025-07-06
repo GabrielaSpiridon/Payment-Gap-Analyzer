@@ -18,45 +18,44 @@ import {
 } from '@mui/material';
 import { CheckCircle, Error as ErrorIcon } from '@mui/icons-material';
 import axios from 'axios';
-import GenderPieChart from '../components/GenderPieChart'; 
+import GenderPieChart from '../components/GenderPieChart';
 import SalaryGenderDepartmentBarChart from '../components/SalaryGenderDepartmentBarChart';
 import SalaryYearLineChart from '../components/SalaryYearLineChart';
 import SalaryGenderSeniorityBarChart from '../components/SalaryGenderSeniorityBarChart';
-import AgeBarChart from '../components/AgeBarChart'; 
-import SalaryTrendByMonth from '../components/SalaryTrendByMonth'; 
-import WorkforceCompositionChart from '../components/WorkforceCompositionChart'; 
-import SalaryGenderJobTitleBarChart from '../components/SalaryGenderJobTitleBarChart'; 
+import AgeBarChart from '../components/AgeBarChart';
+import SalaryTrendByMonth from '../components/SalaryTrendByMonth';
+import WorkforceCompositionChart from '../components/WorkforceCompositionChart';
+import SalaryGenderJobTitleBarChart from '../components/SalaryGenderJobTitleBarChart';
 
-function Dashboard() {
+export default function Dashboard() {
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
   const email = localStorage.getItem('email');
   const [employeeName, setEmployeeName] = useState('');
   const [loadingName, setLoadingName] = useState(true);
-
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
 
   useEffect(() => {
-    if (!userId) {
-      navigate('/login');
-    }
+    if (!userId) navigate('/login');
   }, [userId, navigate]);
 
   useEffect(() => {
     async function fetchName() {
       if (!email) {
-        setEmployeeName('');
         setLoadingName(false);
         return;
       }
       try {
-        const res = await axios.get(`http://localhost:3000/employees/getEmployeeByEmail?email=${encodeURIComponent(email)}`);
-        if (res.data && res.data.first_name && res.data.second_name) {
-          setEmployeeName(`${res.data.first_name} ${res.data.second_name}`);
+        const res = await axios.get(
+          `http://localhost:3000/employees/getEmployeeByEmail?email=${encodeURIComponent(email)}`
+        );
+        const data = res.data;
+        if (data?.first_name && data?.second_name) {
+          setEmployeeName(`${data.first_name} ${data.second_name}`);
         } else {
           setEmployeeName(email);
         }
-      } catch (err) {
+      } catch {
         setEmployeeName(email);
       } finally {
         setLoadingName(false);
@@ -65,52 +64,66 @@ function Dashboard() {
     fetchName();
   }, [email]);
 
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/login');
   };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar(prev => ({ ...prev, open: false }));
+  };
+
+  const chartsList = [
+    { Chart: SalaryGenderJobTitleBarChart },
+    { Chart: WorkforceCompositionChart },
+    { Chart: SalaryTrendByMonth },
+    { Chart: AgeBarChart },
+    { Chart: SalaryGenderSeniorityBarChart },
+    { Chart: GenderPieChart },
+    { Chart: SalaryGenderDepartmentBarChart },
+    { Chart: SalaryYearLineChart },
+  ];
 
   return (
     <Box sx={{ p: { xs: 2, md: 4 } }}>
-      <Paper elevation={3} sx={{ p: 4, maxWidth: 700, mx: 'auto', borderRadius: 3 }}>
-        <Typography variant="h4" mb={2} fontWeight="bold" color="primary">
+      <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
+        <Typography variant="h4" fontWeight="bold" color="primary" gutterBottom>
           Dashboard
         </Typography>
         <Typography variant="subtitle1" gutterBottom>
-          {loadingName ? "Loading..." : <>Welcome, <b>{employeeName || email}</b>!</>}
+          {loadingName
+            ? 'Loading...'
+            : (
+                <>Welcome, <b>{employeeName || email}</b>!</>
+              )}
         </Typography>
+        <Divider sx={{ my: 3 }} />
 
-      
+        <Box display="flex" flexWrap="wrap" justifyContent="space-around" gap={2}>
+          {chartsList.map(({ title, Chart }, idx) => (
+            <Paper
+              key={idx}
+              elevation={2}
+              sx={{ p: 2, width: { xs: '100%', sm: '48%', md: '30%' }, minHeight: 240 }}
+            >
+             {title === 'Employees Gender Distribution' ? (
+                <Box sx={{ width: 150, height: 150, mx: 'auto' }}>
+                  <GenderPieChart />
+                </Box>
+              ) : (
+                <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Chart />
+                </Box>
+              )}
+            </Paper>
+          ))}
+        </Box>
 
-        <Divider sx={{ my: 4 }} />
-        
-        <SalaryGenderJobTitleBarChart />
-
-        <WorkforceCompositionChart />
-
-        <SalaryTrendByMonth />
-
-        <AgeBarChart />
-
-        <SalaryGenderSeniorityBarChart />
-
-        <GenderPieChart />
-
-        <SalaryGenderDepartmentBarChart />
-
-        <SalaryYearLineChart />
-        
-        <Button
-          variant="outlined"
-          color="error"
-          onClick={() => {
-            localStorage.removeItem('authenticated');
-            localStorage.removeItem('userId');
-            localStorage.removeItem('fullName');
-            navigate('/login');
-          }}
-        >
-          Logout
-        </Button>
+        <Box mt={4} textAlign="center">
+          <Button variant="outlined" color="error" onClick={handleLogout}>
+            Logout
+          </Button>
+        </Box>
       </Paper>
 
       <Snackbar
@@ -123,10 +136,6 @@ function Dashboard() {
           {snackbar.message}
         </MuiAlert>
       </Snackbar>
-    
     </Box>
-    
   );
 }
-
-export default Dashboard;

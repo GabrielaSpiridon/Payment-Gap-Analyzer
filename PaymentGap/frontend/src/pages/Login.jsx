@@ -121,8 +121,18 @@ function Login({ onLoginSuccess }) {
   };
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" sx={{ background: 'linear-gradient(to right, #e3f2fd, #cfd8dc)', px: 2 }}>
-      <Toast ref={toast} />
+  <Box
+    sx={{
+      minHeight: '100vh',
+      /* fundal radial gradient spre margini */
+      background: 'radial-gradient(circle at center, #ffffff 0%, #e3f2fd 60%)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      px: 2
+    }}
+  >  
+    <Toast ref={toast} />
       <Paper elevation={6} sx={{ p: 4, borderRadius: 4, width: '100%', maxWidth: 420, mx: 'auto', position: 'relative' }}>
         {error && (
           <Alert severity="error" sx={{ mb: 2, fontSize: '1.1rem', fontWeight: 'bold', border: '2px solid #c62828', background: '#ffebee', color: '#b71c1c', boxShadow: '0 4px 16px rgba(198, 40, 40, 0.12)' }}>
