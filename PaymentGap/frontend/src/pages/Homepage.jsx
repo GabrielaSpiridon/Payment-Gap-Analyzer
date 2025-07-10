@@ -6,12 +6,9 @@ import {
   Button,
   Typography,
   Paper,
-  Card,
-  CardContent,
-  CardActions,
-  Tooltip,
   Link,
   Stack,
+  Tooltip,
 } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import BarChartIcon from '@mui/icons-material/BarChart';
@@ -31,13 +28,13 @@ export default function HomePage() {
     },
     {
       title: 'Gender Pay Gap Analysis',
-      description: 'View pay gap report.',
+      description: 'View detailed pay gap reports.',
       icon: <PieChartIcon fontSize="large" color="secondary" />,
       path: '/gender-pay-gap',
     },
     {
       title: 'Employee Workforce',
-      description: 'View workforce demographics and composition.',
+      description: 'Explore workforce demographics.',
       icon: <PeopleIcon fontSize="large" color="success" />,
       path: '/employees',
     },
@@ -54,13 +51,15 @@ export default function HomePage() {
           </Typography>
         </Stack>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 3, lineHeight: 1.6 }}>
-          Welcome to our salary analysis platform. Access key insights, visualize trends, and generate reports to understand pay disparities across your organization.
+          Welcome to our salary analysis platform. Access key insights, visualize trends,
+          and generate reports to understand pay disparities across your organization.
         </Typography>
         <Button
           variant="contained"
           color="primary"
           size="large"
           onClick={() => navigate('/dashboard')}
+          sx={{ textTransform: 'none' }}
         >
           Go to Chart Dashboard
         </Button>
@@ -73,35 +72,46 @@ export default function HomePage() {
         </Typography>
         <Box sx={{ mb: 2 }}>
           <Typography variant="body1" paragraph>
-            The Gender Pay Gap (GPG) shows the percentage difference between women’s and men’s average (or median) earnings. The further the GPG is from zero, the greater the inequality in pay.
+            The Gender Pay Gap (GPG) shows the percentage difference between women’s
+            and men’s average (or median) earnings. The farther the GPG is from zero,
+            the greater the inequality in pay.
           </Typography>
           <Typography variant="body1" paragraph>
-            This is not the same as equal pay, which guarantees equal pay for equal or comparable work. A GPG can persist even if equal-pay laws are enforced, reflecting broader factors such as job distribution, seniority, and working hours.
+            This is not the same as equal pay, which guarantees equal pay for equal or
+            comparable work. A GPG can persist even if equal-pay laws are enforced,
+            reflecting broader factors such as job distribution, seniority, and hours worked.
           </Typography>
         </Box>
         <Tooltip
           title={
-            <Link href={gpgLink} target="_blank" rel="noopener" underline="hover">
-             { gpgLink}
-            </Link>
+            <Box sx={{ p: 1, maxWidth: 300 }}>
+              <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                 Find out more about the gender pay gap:
+              </Typography>
+              <Link href={gpgLink} target="_blank" rel="noopener" underline="hover">
+                commission.europa.eu/…/gender-equality_en
+              </Link>
+            </Box>
           }
-          placement="bottom"
+          arrow
+          placement="right"
         >
           <Button
             variant="outlined"
             size="medium"
             onClick={() => window.open(gpgLink, '_blank')}
+            sx={{ textTransform: 'none' }}
           >
             Find out more about the Gender Pay Gap ►
           </Button>
         </Tooltip>
-        <Typography variant="caption" display="block" sx={{ mt: 3 }}>
+        <Typography variant="body2" display="block" sx={{ mt: 3 }}>
           Target range: –5% to +5% (allows for normal workforce fluctuations)
         </Typography>
       </Paper>
 
-      {/* Navigation Cards using Grid v2 API */}
-      <Grid container spacing={4} sx={{ width: '100%' }}>
+      {/* Navigation Cards */}
+      <Grid container spacing={4}>
         {sections.map((sec, idx) => (
           <Grid key={idx} size={{ xs: 12, sm: 6, md: 4 }}>
             <Paper
@@ -116,17 +126,27 @@ export default function HomePage() {
               }}
             >
               <Box sx={{ textAlign: 'center' }}>{sec.icon}</Box>
-              <Typography variant="h6" component="h2" sx={{ mt: 2, mb: 1, textAlign: 'center' }}>
+              <Typography
+                variant="h6"
+                component="h2"
+                sx={{ mt: 2, mb: 1, textAlign: 'center' }}
+              >
                 {sec.title}
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', mb: 2 }}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ textAlign: 'center', mb: 2 }}
+              >
                 {sec.description}
               </Typography>
-              <CardActions sx={{ justifyContent: 'center', mt: 'auto' }}>
-                <Button size="medium" onClick={() => navigate(sec.path)}>
-                  Access
-                </Button>
-              </CardActions>
+              <Button
+                size="medium"
+                onClick={() => navigate(sec.path)}
+                sx={{ mt: 'auto', textTransform: 'none' }}
+              >
+                Access
+              </Button>
             </Paper>
           </Grid>
         ))}

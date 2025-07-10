@@ -26,6 +26,7 @@ import AgeBarChart from '../components/AgeBarChart';
 import SalaryTrendByMonth from '../components/SalaryTrendByMonth';
 import WorkforceCompositionChart from '../components/WorkforceCompositionChart';
 import SalaryGenderJobTitleBarChart from '../components/SalaryGenderJobTitleBarChart';
+import HeatmapSalary from '../components/HeatMap';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -82,6 +83,7 @@ export default function Dashboard() {
     { Chart: GenderPieChart },
     { Chart: SalaryGenderDepartmentBarChart },
     { Chart: SalaryYearLineChart },
+    { Chart: HeatmapSalary}
   ];
 
   return (
