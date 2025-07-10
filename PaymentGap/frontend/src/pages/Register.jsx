@@ -83,6 +83,10 @@ function Register() {
           <Button fullWidth variant="contained" sx={{ mt: 2 }} type="submit">
             Register
           </Button>
+          <Button fullWidth variant="outlined" sx={{ mt: 1 }} onClick={() => navigate('/login')}>
+                        Back to Login
+                      </Button>
+          
         </form>
       </Paper>
     </Box>
