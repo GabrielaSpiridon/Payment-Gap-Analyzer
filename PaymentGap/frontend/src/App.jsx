@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Navbar from './components/Navbar'; 
 import ImportExcelPage from './pages/ImportExcelPage';
 import Employees from './pages/Employees';
+import HomePage from './pages/Homepage';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -35,9 +36,10 @@ function App() {
       <Box>
         <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
         <Routes>
-          <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
-          <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login onLoginSuccess={handleLoginSuccess} />} />
-          <Route path="/register" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Register />} />
+          <Route path="/" element={isAuthenticated ? <Navigate to="/homepage" /> : <Navigate to="/login" />} />
+          <Route path="/login" element={isAuthenticated ? <Navigate to="/homepage" /> : <Login onLoginSuccess={handleLoginSuccess} />} />
+          <Route path="/register" element={isAuthenticated ? <Navigate to="/homepage" /> : <Register />} />
+          <Route path="/homepage" element={isAuthenticated ? <HomePage /> : <Navigate to="/login" />} />
           <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
           <Route path="/import" element={isAuthenticated ? <ImportExcelPage /> : <Navigate to="/login" />} />
           <Route path="/employees" element={isAuthenticated ? <Employees /> : <Navigate to="/login" />} />

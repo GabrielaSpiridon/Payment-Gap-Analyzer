@@ -71,7 +71,7 @@ function Login({ onLoginSuccess }) {
         localStorage.setItem('userId', res.data.userId);
         localStorage.setItem('email', username);
         if (onLoginSuccess) onLoginSuccess();
-        navigate('/dashboard');
+        navigate('/home');
       } else {
         setError(res.data.message || 'Incorrect authentication code');
       }
