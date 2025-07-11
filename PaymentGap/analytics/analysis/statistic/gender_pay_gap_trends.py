@@ -1,10 +1,11 @@
-# your_app/views.py
+from datetime import date
 from collections import defaultdict
+
 import numpy as np
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.db.models import Avg, F
-from django.db.models.functions import TruncYear
+from django.db.models import Min, Max, Q
+
 from ..models import SalaryHistory
 
 def normalize_gender(g):
@@ -19,52 +20,78 @@ def normalize_gender(g):
 
 @api_view(['GET'])
 def gender_pay_gap_trends(request):
-    qs = (
-        SalaryHistory.objects
-        .select_related('id_employee')
-        .annotate(year=TruncYear('start_date'))
-        .values('year', gender=F('id_employee__gender'))
-        .annotate(avg_salary=Avg('salary'))
-        .order_by('year')
+    """
+    Endpoint: /api/gender-pay-gap-trends/
+    Returnează un array de ani cu:
+      - avg_total_remuneration_gpg (valori pozitive, absolute)
+      - median_total_remuneration_gpg (valori pozitive, absolute)
+    Calcul ținând cont de intervalul start_date/end_date.
+    """
+    # 1) Determină primul și ultimul an din SalaryHistory
+    agg = SalaryHistory.objects.aggregate(
+        min_start=Min('start_date')
+      #  max_end=Max('end_date')
     )
+    min_start = agg.get('min_start')
+    if not min_start:
+        return Response([])
+    max_end =  date.today()
 
-    temp = defaultdict(lambda: {'Male': 0.0, 'Female': 0.0})
-    for row in qs:
-        y = row['year'].year
-        g = normalize_gender(row['gender'])
-        temp[y][g] = float(row['avg_salary'] or 0.0)
+    start_year = min_start.year
+    end_year = max_end.year
 
-    result = []
-    for year in sorted(temp):
-        m_avg = temp[year]['Male']
-        f_avg = temp[year]['Female']
-        m_list = list(
-            SalaryHistory.objects
-            .filter(start_date__year=year,
-                    id_employee__gender__iexact='Male')
-            .values_list('salary', flat=True)
-        )
-        f_list = list(
-            SalaryHistory.objects
-            .filter(start_date__year=year,
-                    id_employee__gender__iexact='Female')
-            .values_list('salary', flat=True)
-        )
-        m_med = float(np.median(m_list)) if m_list else 0.0
-        f_med = float(np.median(f_list)) if f_list else 0.0
+    result   = []
+    last_avg = None
+    last_med = None
+
+    # 2) Parcurge fiecare an și calculează gap-ul
+    for year in range(start_year, end_year + 1):
+        start_of_year = date(year, 1, 1)
+        end_of_year   = date(year, 12, 31)
+
+        qs = SalaryHistory.objects.filter(
+            start_date__lte=end_of_year
+        ).filter(
+            Q(end_date__gte=start_of_year) | Q(end_date__isnull=True)
+        ).select_related('id_employee')
+
+        salaries = defaultdict(list)
+        for rec in qs:
+            gen = normalize_gender(rec.id_employee.gender)
+            if rec.salary is not None:
+                salaries[gen].append(float(rec.salary))
+
+        m_list = salaries.get('Male', [])
+        f_list = salaries.get('Female', [])
+
+        # calculează avg și median absolut
+        avg_gap = None
+        med_gap = None
+        if m_list and f_list:
+            m_avg = sum(m_list) / len(m_list)
+            f_avg = sum(f_list) / len(f_list)
+            m_med = float(np.median(m_list))
+            f_med = float(np.median(f_list))
+
+            # folosim valoare absolută a diferenței
+            avg_gap = abs(m_avg - f_avg) / m_avg * 100
+            med_gap = abs(m_med - f_med) / m_med * 100
+
+        # propagă ultima valoare cunoscută dacă valori lipsă
+        if avg_gap is None and last_avg is not None:
+            avg_gap = last_avg
+        if med_gap is None and last_med is not None:
+            med_gap = last_med
+
+        if avg_gap is not None:
+            last_avg = avg_gap
+        if med_gap is not None:
+            last_med = med_gap
 
         result.append({
-            'year': f"{year}-{str(year+1)[2:]}",        # ← corect!
-            'avg_total_remuneration_gpg': (
-                (m_avg - f_avg) / m_avg * 100
-                if m_avg else 0
-            ),
-            'avg_base_salary_gpg': 0,
-            'median_total_remuneration_gpg': (
-                (m_med - f_med) / m_med * 100
-                if m_med else 0
-            ),
-            'median_base_salary_gpg': 0,
+            'year': f"{year}-{str(year+1)[2:]}",
+            'avg_total_remuneration_gpg': round(avg_gap, 1) if avg_gap is not None else None,
+            'median_total_remuneration_gpg': round(med_gap, 1) if med_gap is not None else None,
         })
 
     return Response(result)

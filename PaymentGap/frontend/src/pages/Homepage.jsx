@@ -20,7 +20,7 @@ import GenderPayGapTrendsChart from '../components/GenderPayGapTrendsChart';
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const gpgLink = 'https://commission.europa.eu/.../gender-equality_en';
+  const gpgLink = 'https://commission.europa.eu/strategy-and-policy/policies/justice-and-fundamental-rights/gender-equality_en';
 
   const sections = [
     {
@@ -92,7 +92,8 @@ export default function HomePage() {
         {/* Butonul cu link extern */}
         <Tooltip
           title={
-            <Box sx={{ p: 1, maxWidth: 300 }}>
+            <Box sx={{ p: 1, maxWidth: 300}}>
+              
               <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
                 Find out more about the gender pay gap:
               </Typography>
@@ -101,8 +102,9 @@ export default function HomePage() {
                 target="_blank"
                 rel="noopener"
                 underline="hover"
+                color="white"
               >
-                commission.europa.eu/…/gender-equality_en
+                https://commission.europa.eu/strategy-and-policy/policies/justice-and-fundamental-rights/gender-equality_en
               </Link>
             </Box>
           }
@@ -122,7 +124,7 @@ export default function HomePage() {
         {/* Aici includem mini-chart-ul */}
         <Box sx={{ mt: 4 }}>
           <Typography variant="h6" mb={2}>
-            Evoluția GPG (pe ultimii ani)
+            Gender Pay Gap Trends
           </Typography>
           <GenderPayGapTrendsChart />
         </Box>

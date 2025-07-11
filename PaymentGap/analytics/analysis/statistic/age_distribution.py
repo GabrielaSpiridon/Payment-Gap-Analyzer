@@ -8,13 +8,11 @@ def calculate_age(birth_date):
 
 def get_age_distribution():
     data = Employee.objects.values('date_of_birth')
-    bins = {'<25': 0, '25-34': 0, '35-44': 0, '45-54': 0, '55+': 0, 'Unknown': 0}
+    bins = {'<25': 0, '25-34': 0, '35-44': 0, '45-54': 0, '55+': 0}
 
     for entry in data:
         dob = entry['date_of_birth']
-        if not dob:
-            bins['Unknown'] += 1
-            continue
+    
         age = calculate_age(dob)
         if age < 25:
             bins['<25'] += 1

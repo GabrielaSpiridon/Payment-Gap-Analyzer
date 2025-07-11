@@ -74,15 +74,6 @@ export default function GenderPayGapTrendsChart() {
               pointRadius: 3,
             },
             {
-              label: 'Average base salary GPG',
-              data: avgBase,
-              borderWidth: 2,
-              tension: 0.4,
-              borderColor: 'rgba(45, 105, 123, 0.8)',
-              backgroundColor: 'rgba(45, 105, 123, 0.2)',
-              pointRadius: 3,
-            },
-            {
               label: 'Median total remuneration GPG',
               data: medTotal,
               borderWidth: 2,
@@ -90,16 +81,7 @@ export default function GenderPayGapTrendsChart() {
               borderColor: 'rgba(242, 198, 73, 0.8)',
               backgroundColor: 'rgba(242, 198, 73, 0.2)',
               pointRadius: 3,
-            },
-            {
-              label: 'Median base salary GPG',
-              data: medBase,
-              borderWidth: 2,
-              tension: 0.4,
-              borderColor: 'rgba(167, 206, 234, 0.8)',
-              backgroundColor: 'rgba(167, 206, 234, 0.2)',
-              pointRadius: 3,
-            },
+            }
           ]
         });
         setLoading(false);
@@ -119,7 +101,7 @@ export default function GenderPayGapTrendsChart() {
   return (
     <Box>
       <Typography variant="h6" mb={2}>
-        Progres Gender Pay Gap (2013–2023)
+        Progres Gender Pay Gap
       </Typography>
       <Line
         data={chartData}

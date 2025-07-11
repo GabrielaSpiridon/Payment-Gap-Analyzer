@@ -78,7 +78,7 @@ function ImportExcelPage() {
     <Box sx={{ p: { xs: 2, md: 4 } }}>
       <Paper elevation={4} sx={{ p: 3, maxWidth: 700, mx: 'auto', borderRadius: 2 }}>
         <Typography variant="h4" gutterBottom fontWeight="bold">
-          Importați fișiere Excel
+          Import Excel Files
         </Typography>
 
         <Divider sx={{ my: 2 }} />
@@ -89,7 +89,7 @@ function ImportExcelPage() {
             component="label"
             startIcon={<UploadFile />}
           >
-            Alege fișiere
+            Choose Files
             <input
               hidden
               multiple
@@ -114,13 +114,13 @@ function ImportExcelPage() {
             onClick={handleUpload}
             disabled={uploading || !files.length}
           >
-            {uploading ? <CircularProgress size={24} /> : 'Încarcă fișiere'}
+            {uploading ? <CircularProgress size={24} /> : 'Load Files'}
           </Button>
 
           {results.length > 0 && (
             <Box>
               <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
-                Rezultate import
+                Import Results
               </Typography>
               <List disablePadding>
                 {results.map((r, idx) => (
@@ -138,7 +138,7 @@ function ImportExcelPage() {
                     <ListItemText
                       primary={r.fileName}
                       secondary={
-                        r.status === 'success' ? 'Import reușit' : `Eroare: ${r.message}`
+                        r.status === 'success' ? 'Succesful Import' : `Eroare: ${r.message}`
                       }
                     />
                   </ListItem>
@@ -150,7 +150,7 @@ function ImportExcelPage() {
                       startIcon={<Replay />}
                       onClick={retryFailed}
                     >
-                      Reîncearcă fișiere eșuate
+                      Retry Failed Files
                     </Button>
                   </Box>
                 )}

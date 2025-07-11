@@ -85,8 +85,7 @@ export default function Dashboard() {
     { Chart: GenderPieChart },
     { Chart: SalaryGenderDepartmentBarChart },
     { Chart: SalaryYearLineChart },
-    { Chart: HeatmapSalary },
-    { Chart: GenderPayGapTrendsChart },
+    { Chart: HeatmapSalary }
   ];
 
   return (
@@ -124,11 +123,7 @@ export default function Dashboard() {
           ))}
         </Box>
 
-        <Box mt={4} textAlign="center">
-          <Button variant="outlined" color="error" onClick={handleLogout}>
-            Logout
-          </Button>
-        </Box>
+       
       </Paper>
 
       <Snackbar
