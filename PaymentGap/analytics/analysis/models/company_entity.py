@@ -8,8 +8,6 @@ class CompanyEntity(models.Model):
     id_company = models.ForeignKey('Company', models.DO_NOTHING, db_column='id_company', blank=True, null=True)
     id_department = models.IntegerField(blank=True, null=True)
     id_manager = models.IntegerField(blank=True, null=True)
-    id_manager_type = models.IntegerField(blank=True, null=True)
-    id_structure = models.IntegerField(blank=True, null=True)
 
 
     def __str__(self):

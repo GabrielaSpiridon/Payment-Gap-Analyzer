@@ -9,6 +9,7 @@ from analysis.statistic.workforce_composition import get_workforce_composition
 from analysis.statistic.salary_by_gender_job_title import get_salary_by_gender_job_title
 from analysis.statistic.heat_map import heatmap_data_api
 
+
 def gender_distribution_api(request):
     data = get_gender_distribution()
     return JsonResponse(data, safe=False)
@@ -42,9 +43,6 @@ def salary_by_gender_job_title_api(request):
     return JsonResponse(data, safe=False)
 
 def heatmap_api(request):
-    """
-    API endpoint: GET /api/salary-heatmap/
-    Returnează JSON cu structura pentru heatmap-ul React.
-    """
     data = heatmap_data_api()
     return JsonResponse(data, safe=False)
+

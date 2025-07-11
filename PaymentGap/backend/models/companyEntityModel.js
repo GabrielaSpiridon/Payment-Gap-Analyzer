@@ -23,16 +23,16 @@ export async function getCompanyEntityById(id) {
 export async function createCompanyEntity(data) {
   const {
     company_entity_name, id_region, id_country, id_company,
-    id_department, id_manager, id_manager_type, id_structure
+    id_department, id_manager
   } = data;
 
   const conn = await pool.getConnection();
   try {
     const result = await conn.query(
       `INSERT INTO company_entities 
-        (company_entity_name, id_region, id_country, id_company, id_department, id_manager, id_manager_type, id_structure)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [company_entity_name, id_region, id_country, id_company, id_department, id_manager, id_manager_type, id_structure]
+        (company_entity_name, id_region, id_country, id_company, id_department, id_manager)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [company_entity_name, id_region, id_country, id_company, id_department, id_manager]
     );
     return Number(result.insertId);
   } finally {
@@ -51,9 +51,9 @@ export async function updateCompanyEntity(id, data) {
     const result = await conn.query(
       `UPDATE company_entities SET 
         company_entity_name = ?, id_region = ?, id_country = ?, id_company = ?, 
-        id_department = ?, id_manager = ?, id_manager_type = ?, id_structure = ?
+        id_department = ?, id_manager = ?
        WHERE id_company_entity = ?`,
-      [company_entity_name, id_region, id_country, id_company, id_department, id_manager, id_manager_type, id_structure, id]
+      [company_entity_name, id_region, id_country, id_company, id_department, id_manager,  id]
     ); 
     return result.affectedRows > 0;
   } finally {
