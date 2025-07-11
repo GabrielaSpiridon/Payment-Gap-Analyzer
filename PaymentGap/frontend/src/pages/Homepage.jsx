@@ -15,9 +15,12 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import PieChartIcon from '@mui/icons-material/PieChart';
 import PeopleIcon from '@mui/icons-material/People';
 
+// → importă-ți componenta chart (calea poate fi alta în proiectul tău)
+import GenderPayGapTrendsChart from '../components/GenderPayGapTrendsChart';
+
 export default function HomePage() {
   const navigate = useNavigate();
-  const gpgLink = 'https://commission.europa.eu/strategy-and-policy/policies/justice-and-fundamental-rights/gender-equality_en';
+  const gpgLink = 'https://commission.europa.eu/.../gender-equality_en';
 
   const sections = [
     {
@@ -43,7 +46,10 @@ export default function HomePage() {
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto', p: { xs: 2, md: 4 } }}>
       {/* Main Banner */}
-      <Paper elevation={4} sx={{ p: 4, borderRadius: 3, mb: 6, bgcolor: 'background.paper' }}>
+      <Paper
+        elevation={4}
+        sx={{ p: 4, borderRadius: 3, mb: 6, bgcolor: 'background.paper' }}
+      >
         <Stack direction="row" alignItems="center" spacing={2} mb={2}>
           <HomeIcon sx={{ fontSize: 48, color: 'primary.main' }} />
           <Typography variant="h3" component="h1" color="text.primary">
@@ -65,7 +71,7 @@ export default function HomePage() {
         </Button>
       </Paper>
 
-      {/* Gender Pay Gap Info Section */}
+      {/* Gender Pay Gap Info + Mini-Chart */}
       <Paper elevation={2} sx={{ p: 4, borderRadius: 3, mb: 6, bgcolor: 'grey.50' }}>
         <Typography variant="h5" fontWeight="medium" gutterBottom>
           What is the Gender Pay Gap?
@@ -82,13 +88,20 @@ export default function HomePage() {
             reflecting broader factors such as job distribution, seniority, and hours worked.
           </Typography>
         </Box>
+
+        {/* Butonul cu link extern */}
         <Tooltip
           title={
             <Box sx={{ p: 1, maxWidth: 300 }}>
               <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                 Find out more about the gender pay gap:
+                Find out more about the gender pay gap:
               </Typography>
-              <Link href={gpgLink} target="_blank" rel="noopener" underline="hover">
+              <Link
+                href={gpgLink}
+                target="_blank"
+                rel="noopener"
+                underline="hover"
+              >
                 commission.europa.eu/…/gender-equality_en
               </Link>
             </Box>
@@ -105,6 +118,15 @@ export default function HomePage() {
             Find out more about the Gender Pay Gap ►
           </Button>
         </Tooltip>
+
+        {/* Aici includem mini-chart-ul */}
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h6" mb={2}>
+            Evoluția GPG (pe ultimii ani)
+          </Typography>
+          <GenderPayGapTrendsChart />
+        </Box>
+
         <Typography variant="body2" display="block" sx={{ mt: 3 }}>
           Target range: –5% to +5% (allows for normal workforce fluctuations)
         </Typography>
@@ -113,7 +135,7 @@ export default function HomePage() {
       {/* Navigation Cards */}
       <Grid container spacing={4}>
         {sections.map((sec, idx) => (
-          <Grid key={idx} size={{ xs: 12, sm: 6, md: 4 }}>
+          <Grid key={idx} item xs={12} sm={6} md={4}>
             <Paper
               elevation={3}
               sx={{
