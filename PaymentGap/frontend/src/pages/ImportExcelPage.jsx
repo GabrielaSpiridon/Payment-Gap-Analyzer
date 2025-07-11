@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Box,
   Button,
   Typography,
   Paper,
   Divider,
-  InputLabel,
   List,
   ListItem,
   ListItemText,
   ListItemIcon,
   CircularProgress,
-  Alert,
+   Alert as MuiAlert,
   Snackbar,
-  Alert as MuiAlert,
+  Stack,
+  Chip,
 } from '@mui/material';
-import { CheckCircle, Error as ErrorIcon } from '@mui/icons-material';
+import { UploadFile, CheckCircle, Error as ErrorIcon, Replay } from '@mui/icons-material';
 import axios from 'axios';
 
 function ImportExcelPage() {
@@ -23,6 +23,7 @@ function ImportExcelPage() {
   const [results, setResults] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
+  const fileInputRef = useRef();
 
   const handleFileChange = (e) => {
     setFiles(Array.from(e.target.files));
@@ -30,122 +31,133 @@ function ImportExcelPage() {
   };
 
   const handleUpload = async () => {
-    if (files.length === 0) return;
+    if (!files.length) return;
 
     const formData = new FormData();
     files.forEach((file) => formData.append('files', file));
 
     setUploading(true);
     try {
-      const res = await axios.post('http://localhost:8000/api/upload-excel/', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-
+      const res = await axios.post(
+        'http://localhost:8000/api/upload-excel/',
+        formData,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      );
       const responseResults = res.data.results || [];
       setResults(responseResults);
-
-      const allSuccessful = responseResults.every((r) => r.status === 'success');
+      const allSuccess = responseResults.every((r) => r.status === 'success');
       setSnackbar({
         open: true,
-        message: allSuccessful ? 'All files were uploaded successfully!' : 'Some files failed to upload.',
-        severity: allSuccessful ? 'success' : 'warning',
+        message: allSuccess
+          ? 'All files uploaded successfully!'
+          : 'Some files failed to import.',
+        severity: allSuccess ? 'success' : 'warning',
       });
     } catch (err) {
-      let responseResults = [];
-      if (err.response && err.response.data && err.response.data.results) {
-         responseResults = err.response.data.results;
-       } else {
-          responseResults = files.map((f) => ({
-            fileName: f.name,
-            status: 'failed',
-            message: 'Network or server error'
-        }));
-      }
-     setResults(responseResults);setSnackbar({
-        open: true,
-        message: 'Upload failed due to a server error.',
-        severity: 'error',
-      });
+      const fallback = files.map((f) => ({ fileName: f.name, status: 'failed', message: 'Network or server error' }));
+      const responseResults = err.response?.data?.results || fallback;
+      setResults(responseResults);
+      setSnackbar({ open: true, message: 'Upload failed.', severity: 'error' });
     } finally {
       setUploading(false);
     }
   };
 
   const retryFailed = () => {
-    const failedFiles = files.filter((file) =>
-      results.find((r) => r.fileName === file.name && r.status === 'failed')
-    );
-    setFiles(failedFiles);
+    const failed = results
+      .filter((r) => r.status !== 'success')
+      .map((r) => files.find((f) => f.name === r.fileName));
+    setFiles(failed);
     setResults([]);
+    fileInputRef.current.value = null;
   };
 
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
+  const handleCloseSnackbar = () => setSnackbar((s) => ({ ...s, open: false }));
 
   return (
     <Box sx={{ p: { xs: 2, md: 4 } }}>
-      <Paper elevation={3} sx={{ p: 4, maxWidth: 600, mx: 'auto', borderRadius: 3 }}>
-        <Typography variant="h4" mb={2} fontWeight="bold" color="primary">
-          Import Excel Files
+      <Paper elevation={4} sx={{ p: 3, maxWidth: 700, mx: 'auto', borderRadius: 2 }}>
+        <Typography variant="h4" gutterBottom fontWeight="bold">
+          Importați fișiere Excel
         </Typography>
 
         <Divider sx={{ my: 2 }} />
 
-        <Typography variant="h6" mb={1}>
-          Select one or more Excel files (.xlsx, .xls)
-        </Typography>
-        <InputLabel htmlFor="upload-excel" sx={{ mb: 1 }}>
-          Choose files
-        </InputLabel>
-        <input
-          multiple
-          type="file"
-          accept=".xlsx,.xls"
-          onChange={handleFileChange}
-          id="upload-excel"
-          style={{ marginBottom: '16px' }}
-        />
+        <Stack spacing={2}>
+          <Button
+            variant="outlined"
+            component="label"
+            startIcon={<UploadFile />}
+          >
+            Alege fișiere
+            <input
+              hidden
+              multiple
+              type="file"
+              accept=".xlsx,.xls"
+              onChange={handleFileChange}
+              ref={fileInputRef}
+            />
+          </Button>
 
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleUpload}
-          disabled={uploading || files.length === 0}
-        >
-          {uploading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Upload Files'}
-        </Button>
-
-        {results.length > 0 && (
-          <Box mt={3}>
-            <Typography variant="subtitle1" mb={1}>Import result:</Typography>
-            <List dense>
-              {results.map((r, idx) => (
-                <ListItem key={idx}>
-                  <ListItemIcon>
-                    {r.status === 'success' ? (
-                      <CheckCircle color="success" />
-                    ) : (
-                      <ErrorIcon color="error" />
-                    )}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={r.fileName}
-                    secondary={r.status === 'success' ? 'Import successful' : `Failed: ${r.message}`}
-                  />
-                </ListItem>
+          {files.length > 0 && (
+            <Stack direction="row" spacing={1} flexWrap="wrap">
+              {files.map((file) => (
+                <Chip key={file.name} label={file.name} />
               ))}
-            </List>
-            {results.some((r) => r.status === 'failed') && (
-              <Alert severity="warning" sx={{ mt: 2 }}>
-                Some files failed to import. You can retry them.
-                <Button size="small" sx={{ ml: 2 }} onClick={retryFailed}>
-                  Retry failed
-                </Button>
-              </Alert>
-            )}
-          </Box>
-        )}
+            </Stack>
+          )}
+
+          <Button
+            variant="contained"
+            size="large"
+            onClick={handleUpload}
+            disabled={uploading || !files.length}
+          >
+            {uploading ? <CircularProgress size={24} /> : 'Încarcă fișiere'}
+          </Button>
+
+          {results.length > 0 && (
+            <Box>
+              <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+                Rezultate import
+              </Typography>
+              <List disablePadding>
+                {results.map((r, idx) => (
+                  <ListItem
+                    key={idx}
+                    sx={{ bgcolor: r.status === 'success' ? 'success.lighter' : 'error.lighter', mb: 1, borderRadius: 1 }}
+                  >
+                    <ListItemIcon>
+                      {r.status === 'success' ? (
+                        <CheckCircle color="success" />
+                      ) : (
+                        <ErrorIcon color="error" />
+                      )}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={r.fileName}
+                      secondary={
+                        r.status === 'success' ? 'Import reușit' : `Eroare: ${r.message}`
+                      }
+                    />
+                  </ListItem>
+                ))}
+                {results.some((r) => r.status !== 'success') && (
+                  <Box textAlign="right" mt={1}>
+                    <Button
+                      variant="text"
+                      startIcon={<Replay />}
+                      onClick={retryFailed}
+                    >
+                      Reîncearcă fișiere eșuate
+                    </Button>
+                  </Box>
+                )}
+              </List>
+            </Box>
+          )}
+        </Stack>
       </Paper>
 
       <Snackbar

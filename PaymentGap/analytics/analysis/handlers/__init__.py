@@ -7,6 +7,7 @@ from .upload_departments import insert_departments
 from .upload_countries import insert_countries
 from .upload_locations import insert_locations
 from .upload_regions import insert_regions
+from .upload_company_entitities import insert_company_entities
 
 
 handler_map = {
@@ -26,5 +27,7 @@ handler_map = {
     'locations': insert_locations,
     'region': insert_regions,
     'regions': insert_regions,
+    'company_entity': insert_company_entities,
+    'company_entities': insert_company_entities,
 }
 
