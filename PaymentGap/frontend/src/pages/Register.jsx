@@ -20,11 +20,20 @@ function Register() {
     e.preventDefault();
     try {
       const res = await axios.post('http://localhost:3000/auth/register', { username, password, role });
-      showToast('success', 'Success', `User registered! ID: ${res.data.userId}`);
+      showToast('success', 'Success', `User registered! `);
       navigate('/login');
     } catch (err) {
-      showToast('error', 'Registration failed', err.message);
+      const status = err.response?.status;
+    // dacă back-end trimite 409 pentru username existent
+    if (status === 500) {
+      showToast('error', 'Registration failed', 'This email is already registered.');
     }
+    else {
+      // altfel arătăm mesajul generic sau cel venit de la server
+      const detail = err.response?.data?.message || err.message;
+      showToast('error', 'Registration failed', detail);
+    }
+  }
   };
 
   return (

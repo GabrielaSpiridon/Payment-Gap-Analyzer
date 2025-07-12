@@ -33,7 +33,7 @@ export default function HomePage() {
       title: 'Gender Pay Gap Analysis',
       description: 'View detailed pay gap reports.',
       icon: <PieChartIcon fontSize="large" color="secondary" />,
-      path: '/gender-pay-gap',
+      path: '/report',
     },
     {
       title: 'Employee Workforce',
