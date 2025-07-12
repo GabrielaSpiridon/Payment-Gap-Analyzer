@@ -34,8 +34,6 @@ export default function GenderPayGapTrendsChart() {
         return res.json();
       })
       .then(json => {
-        console.log('API response:', json);
-        // Dacă răspunsul nu e direct un array, scoatem array-ul de jos
         const rows = Array.isArray(json)
           ? json
           : json.results
@@ -95,46 +93,46 @@ export default function GenderPayGapTrendsChart() {
 
   if (loading) return <CircularProgress />;
   if (error || !chartData) {
-    return <Typography color="error">Date indisponibile pentru grafic.</Typography>;
+    return <Typography color="error">No data for this chart.</Typography>;
   }
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false, // allow wrapper to control sizing
+    interaction: {
+      mode: 'index',
+      intersect: false,
+    },
+    stacked: false,
+    plugins: {
+      legend: { position: 'bottom' },
+      tooltip: {
+        callbacks: {
+          label: ctx => ctx.dataset.label.includes('Target')
+            ? null
+            : `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}%`
+        }
+      }
+    },
+    scales: {
+      y: {
+        title: { display: true, text: 'Gender pay gap (%)' },
+        min: 0,
+        max: 30,
+      },
+      x: {
+        title: { display: true, text: 'Year' }
+      }
+    }
+  };
 
   return (
-    <Box>
+      <Box>
       <Typography variant="h6" mb={2}>
-        Progres Gender Pay Gap
+        Gender Pay Gap Progress
       </Typography>
-      <Line
-        data={chartData}
-        options={{
-          responsive: true,
-          interaction: {
-            mode: 'index',
-            intersect: false,
-          },
-          stacked: false,
-          plugins: {
-            legend: { position: 'bottom' },
-            tooltip: {
-              callbacks: {
-                label: ctx => {
-                  if (ctx.dataset.label.includes('Target')) return null;
-                  return `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}%`;
-                }
-              }
-            }
-          },
-          scales: {
-            y: {
-              title: { display: true, text: 'Gender pay gap (%)' },
-              min: 0,
-              max: 30
-            },
-            x: {
-              title: { display: true, text: 'Anul raportat' }
-            }
-          }
-        }}
-      />
+      <Box sx={{ width: '100%', height: { xs: 300, md: 500 } }}>
+        <Line data={chartData} options={options} />
+      </Box>
     </Box>
   );
 }

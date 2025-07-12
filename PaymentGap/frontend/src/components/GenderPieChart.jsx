@@ -34,16 +34,26 @@ function GenderPieChart() {
 
   if (loading) return <CircularProgress />;
   if (!chartData) return <Typography color="error">No data available for this chart.</Typography>;
+  
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,    // let the wrapper size it
+    plugins: {
+      legend: { position: 'bottom' }
+    }
+  };
+
 
   return (
-    <Box>
-      <Typography variant="h6" mb={2}>Employees gender distribution</Typography>
-      <Pie data={chartData} options={{
-        responsive: true,
-        plugins: {
-          legend: { position: 'bottom' }
-        }
-      }} />
+     <Box>
+      <Typography variant="h6" mb={2}>
+        Employees Gender Distribution
+      </Typography>
+
+      {/* Responsive wrapper: full width, height 300px on mobile, 400px on desktop */}
+      <Box sx={{ width: '100%', height: { xs: 300, md: 400 } }}>
+        <Pie data={chartData} options={options} />
+      </Box>
     </Box>
   );
 }

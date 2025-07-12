@@ -46,16 +46,29 @@ function SalaryGenderSeniorityBarChart() {
   if (loading) return <CircularProgress />;
   if (!data) return <Typography color="error">No data for this chart.</Typography>;
 
+   const options = {
+    responsive: true,
+    maintainAspectRatio: false,   // allow parent to control dimensions
+    plugins: { legend: { position: 'bottom' } },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: { display: true, text: "Average Salary" }
+      },
+      x: {
+        title: { display: true, text: "Seniority Level" }
+      }
+    }
+  };
+
   return (
-    <Box sx={{ mt: 4 }}>
-      <Typography variant="h6" mb={2}>Average Salary by Gender and Seniority</Typography>
-      <Bar data={data} options={{
-        responsive: true,
-        plugins: { legend: { position: 'bottom' } },
-        scales: {
-          y: { beginAtZero: true, title: { display: true, text: "Average Salary" } }
-        }
-      }} />
+    <Box>
+      <Typography variant="h6" mb={2}>
+        Average Salary by Gender and Seniority
+      </Typography>
+       <Box sx={{ width: '100%', height: { xs: 300, md: 500 } }}>
+      <Bar data={data} options={options} />
+    </Box>
     </Box>
   );
 }

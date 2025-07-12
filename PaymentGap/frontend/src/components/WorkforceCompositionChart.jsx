@@ -52,43 +52,46 @@ function WorkforceCompositionChart() {
     if (loading) return <CircularProgress />;
     if (!data) return <Typography color="error">No data available for this chart.</Typography>;
 
+    const options = {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,   // let wrapper control sizing
+    scales: {
+      x: {
+        stacked: true,
+        max: 100,
+        title: { display: true, text: 'Percentage' },
+      },
+      y: {
+        stacked: true,
+        title: { display: true, text: 'Role' },
+      }
+    },
+    plugins: {
+      legend: { position: 'bottom' },
+      tooltip: {
+        callbacks: {
+          label: ctx => {
+            const label   = ctx.dataset.label;
+            const percent = ctx.parsed.x;
+            const count   = ctx.dataset.countData[ctx.dataIndex];
+            return `${label}: ${percent}% (${count} people)`;
+          }
+        }
+      }
+    }
+  };
+
     return (
         <Box>
-            <Typography variant="h6" mb={2}>Workforce Composition by Role and Gender</Typography>
-            <Bar
-                data={data}
-                options={{
-                    indexAxis: 'y',
-                    responsive: true,
-                    scales: {
-                        x: {
-                            stacked: true,
-                            max: 100,
-                            title: {
-                                display: true,
-                                text: 'Percentage'
-                            }
-                        },
-                        y: {
-                            stacked: true
-                        }
-                    },
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        tooltip: {
-                            callbacks: {
-                                label: ctx => {
-                                    const label = ctx.dataset.label;
-                                    const percent = ctx.parsed.x;
-                                    const count = ctx.dataset.countData[ctx.dataIndex];
-                                    return `${label}: ${percent}% (${count} people)`;
-                                }
-                            }
-                        }
-                    }
-                }}
-            />
-        </Box>
+      <Typography variant="h6" mb={2}>
+        Workforce Composition by Role and Gender
+      </Typography>
+      {/* Responsive wrapper */}
+      <Box sx={{ width: '100%', height: { xs: 300, md: 500 } }}>
+        <Bar data={data} options={options} />
+      </Box>
+    </Box>
     );
 }
 

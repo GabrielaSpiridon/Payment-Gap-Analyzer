@@ -39,25 +39,34 @@ function SalaryGenderDepartmentBarChart() {
   if (loading) return <CircularProgress />;
   if (!chartData) return <Typography color="error">No data for this chart.</Typography>;
 
+  const options = {
+      responsive: true,
+      maintainAspectRatio: false,   // allow the wrapper to dictate size
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: { enabled: true }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: 'Average Salary' }
+        },
+        x: {
+          title: { display: true, text: 'Department' }
+        }
+      }
+    };
+
+
   return (
-    <Box>
-      <Typography variant="h6" mb={2}>Average Salary by Gender per Department</Typography>
-      <Bar
-        data={chartData}
-        options={{
-          responsive: true,
-          plugins: {
-            legend: { position: 'top' },
-            tooltip: { enabled: true }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              title: { display: true, text: 'Average Salary' }
-            }
-          }
-        }}
-      />
+     <Box>
+      <Typography variant="h6" mb={2}>
+        Average Salary by Gender per Department
+      </Typography>
+      {/* Responsive wrapper: full width, height 300px on mobile, 500px on desktop */}
+      <Box sx={{ width: '100%', height: { xs: 300, md: 500 } }}>
+        <Bar data={chartData} options={options} />
+      </Box>
     </Box>
   );
 }

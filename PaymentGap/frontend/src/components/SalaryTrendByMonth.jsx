@@ -53,25 +53,25 @@ function SalaryTrendByMonth() {
   if (loading) return <CircularProgress />;
   if (!chartData) return <Typography color="error">No data for this chart.</Typography>;
 
+   const options = {
+    responsive: true,
+    maintainAspectRatio: false,    // allow wrapper to size it
+    plugins: {
+      legend: { position: 'bottom' },
+      tooltip: { mode: 'index', intersect: false }
+    },
+    scales: {
+      x: { title: { display: true, text: 'Month' } },
+      y: { beginAtZero: true, title: { display: true, text: 'Average Salary' } }
+    }
+  };
+
   return (
-    <Box>
-      <Typography variant="h6" mb={2}>Monthly Salary Trend by Gender</Typography>
-      <Line data={chartData} options={{
-        responsive: true,
-        plugins: {
-          legend: { position: 'bottom' },
-          tooltip: { mode: 'index', intersect: false }
-        },
-        scales: {
-          x: {
-            title: { display: true, text: 'Month' }
-          },
-          y: {
-            beginAtZero: true,
-            title: { display: true, text: 'Average Salary' }
-          }
-        }
-      }} />
+   <Box sx={{ width: '100%', height: { xs: 300, md: 500 }}}>
+      <Typography variant="h6" mb={2}>
+        Monthly Salary Trend by Gender
+      </Typography>
+      <Line data={chartData} options={options} />
     </Box>
   );
 }

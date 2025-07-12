@@ -37,7 +37,6 @@ export default function HeatmapSalary() {
 
   const { rows, cols, values } = heatmap;
 
-  // ———————————————————————————
   // 1) parametrul de spațiu între celule
   const gapSize = 50;           // px între coloane și între rânduri
 
@@ -58,18 +57,24 @@ export default function HeatmapSalary() {
     (rows.length - 1) * gapSize +   // spațiile între rânduri
     margin.t + margin.b;            // marginile sus/jos
 
+     const config = {
+    responsive: true,
+    displayModeBar: false
+  };
+  
   return (
     <Box>
       <Typography variant="h6" mb={2}>
         Heatmap Payment Gap
       </Typography>
+      <Box sx={{ width: '100%', height: { xs: 300, md: 600 } }}>
       <Plot
         data={[{
           type: 'heatmap',
           z: values,
           x: cols,
           y: rows,
-          colorscale: 'RdBu',
+          colorscale: 'cividis',
           reversescale: true,
           showscale: true,
           colorbar: { title: 'Sumă (RON)' },
@@ -92,6 +97,7 @@ export default function HeatmapSalary() {
         // forțăm container-ul să aibă exact acele dimensiuni
         style={{ width: `${chartWidth}px`, height: `${chartHeight}px` }}
       />
+      </Box>
     </Box>
   );
 }

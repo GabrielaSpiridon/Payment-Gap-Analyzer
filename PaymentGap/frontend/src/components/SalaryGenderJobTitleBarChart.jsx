@@ -46,39 +46,32 @@ function SalaryGenderJobTitleBarChart() {
 
   if (loading) return <CircularProgress />;
   if (!chartData) return <Typography color="error">No data available for this chart.</Typography>;
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,    // ← allow CSS to size it
+    plugins: {
+      legend: { position: 'bottom' },
+      tooltip: {
+        callbacks: {
+          label: ctx => `${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()}`
+        }
+      }
+    },
+    scales: {
+      y: { beginAtZero: true, title: { display: true, text: 'Average Salary' } },
+      x: { title: { display: true, text: 'Job Title' } }
+    }
+  };
 
   return (
-    <Box>
-      <Typography variant="h6" mb={2}>Average Salary by Gender per Job Title</Typography>
-      <Bar
-        data={chartData}
-        options={{
-          responsive: true,
-          plugins: {
-            legend: { position: 'bottom' },
-            tooltip: {
-              callbacks: {
-                label: ctx => `${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()}`
-              }
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              title: {
-                display: true,
-                text: 'Average Salary'
-              }
-            },
-            x: {
-              title: {
-                display: true,
-                text: 'Job Title'
-              }
-            }
-          }
-        }}
-      />
+     <Box>
+      <Typography variant="h6" mb={2}>
+        Average Salary by Gender per Job Title
+      </Typography>
+      {/* give the chart a responsive height */}
+      <Box sx={{ width: '100%', height: { xs: 300, md: 500 } }}>
+        <Bar data={chartData} options={options} />
+      </Box>
     </Box>
   );
 }

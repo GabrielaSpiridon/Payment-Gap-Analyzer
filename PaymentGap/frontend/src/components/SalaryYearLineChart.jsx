@@ -63,16 +63,33 @@ function SalaryYearLineChart() {
   if (loading) return <CircularProgress />;
   if (!data) return <Typography color="error">No data for this chart.</Typography>;
 
+   const options = {
+    responsive: true,
+    maintainAspectRatio: false,   // allow wrapper to size the chart
+    plugins: {
+      legend: { position: 'bottom' }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: { display: true, text: "Average Salary" }
+      },
+      x: {
+        title: { display: true, text: "Year" }
+      }
+    }
+  };
+
+
   return (
     <Box sx={{ mt: 4 }}>
-      <Typography variant="h6" mb={2}>Average Salary by Year and Gender</Typography>
-      <Line data={data} options={{
-        responsive: true,
-        plugins: { legend: { position: 'bottom' } },
-        scales: {
-          y: { beginAtZero: true, title: { display: true, text: "Average Salary" } }
-        }
-      }} />
+      <Typography variant="h6" mb={2}>
+        Average Salary by Year and Gender
+      </Typography>
+      {/* Responsive wrapper: full width, 300px height on mobile, 500px on desktop */}
+      <Box sx={{ width: '100%', height: { xs: 300, md: 500 } }}>
+        <Line data={data} options={options} />
+      </Box>
     </Box>
   );
 }
