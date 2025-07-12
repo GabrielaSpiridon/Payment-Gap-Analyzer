@@ -37,7 +37,7 @@ export default function HomePage() {
     },
     {
       title: 'Employee Workforce',
-      description: 'Explore workforce demographics.',
+      description: 'View details of all employees.',
       icon: <PeopleIcon fontSize="large" color="success" />,
       path: '/employees',
     },

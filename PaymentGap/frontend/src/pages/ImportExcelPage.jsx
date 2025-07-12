@@ -138,7 +138,7 @@ function ImportExcelPage() {
                     <ListItemText
                       primary={r.fileName}
                       secondary={
-                        r.status === 'success' ? 'Succesful Import' : `Eroare: ${r.message}`
+                        r.status === 'success' ? 'Successful Import' : `Eroare: ${r.message}`
                       }
                     />
                   </ListItem>

@@ -14,6 +14,7 @@ from analysis.statistic.gender_pay_gap_trends import gender_pay_gap_trends
 
 from analysis.views.report_views import company_details_api
 from analysis.views.report_views import job_title_salary_alerts_api
+from analysis.views.report_views import gender_distribution_alerts_api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,4 +32,5 @@ urlpatterns = [
 
     path('api/company-details/', company_details_api),
     path('api/job-title-salary-alerts/', job_title_salary_alerts_api),
+    path('api/gender-distribution-alerts/', gender_distribution_alerts_api),
 ]
