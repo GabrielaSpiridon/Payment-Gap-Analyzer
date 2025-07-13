@@ -69,7 +69,7 @@ function SalaryTrendByMonth() {
   return (
    <Box sx={{ width: '100%', height: { xs: 300, md: 500 }}}>
       <Typography variant="h6" mb={2}>
-        Monthly Salary Trend by Gender
+        Monthly New Salary Trend by Gender
       </Typography>
       <Line data={chartData} options={options} />
     </Box>
