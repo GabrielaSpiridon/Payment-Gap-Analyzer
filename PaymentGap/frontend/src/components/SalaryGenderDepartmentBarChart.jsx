@@ -21,8 +21,8 @@ function SalaryGenderDepartmentBarChart() {
           label: gender,
           data: departments.map(dept => data[dept][gender] || 0),
           backgroundColor: [
-            'rgba(54, 162, 235, 0.7)', // Male
             'rgba(255, 99, 132, 0.7)', // Female
+            'rgba(54, 162, 235, 0.7)', // Male
             'rgba(255, 206, 86, 0.7)', // Other
           ][i % 3]
         }));
