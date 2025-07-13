@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
+import logo from '../assets/logo.svg'; 
 
 function Navbar({ isAuthenticated, onLogout }) {
   const theme = useTheme();
@@ -74,14 +75,25 @@ function Navbar({ isAuthenticated, onLogout }) {
     <>
       <AppBar position="static" sx={{ bgcolor: 'white', color: 'black' }}>
         <Toolbar sx={{ justifyContent: 'space-between' }}>
-          <Typography
-            variant="h6"
+          <Box
             component={Link}
             to="/"
-            sx={{ textDecoration: 'none', color: 'inherit' }}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              textDecoration: 'none',
+              color: 'inherit'
+            }}
           >
-            Payment Gap Analyzer
-          </Typography>
+            <img
+              src={logo}
+              alt="Logo"
+              style={{ height: 32, marginRight: 8 }} 
+            />
+            <Typography variant="h6" sx={{ color: 'inherit' }}>
+              Payment Gap Analyzer
+            </Typography>
+          </Box>
 
           {isMobile ? (
             <IconButton edge="end" onClick={handleDrawerToggle} color="inherit">
