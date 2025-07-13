@@ -53,7 +53,7 @@ function SalaryGenderJobTitleBarChart() {
       legend: { position: 'bottom' },
       tooltip: {
         callbacks: {
-          label: ctx => `${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()}`
+          label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()}`
         }
       }
     },

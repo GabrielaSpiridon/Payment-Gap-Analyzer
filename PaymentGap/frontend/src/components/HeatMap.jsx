@@ -77,11 +77,15 @@ export default function HeatmapSalary() {
           colorscale: 'cividis',
           reversescale: true,
           showscale: true,
-          colorbar: { title: 'Sumă (RON)' },
+          colorbar: { title:{ text: 'Amount (RON)',
+                      side: 'bottom', // sau 'right', sau 'top'
+                      font: { size: 10, color: 'black' }
+          }
+                    },
 
           // spațiu între “pătrățele”
-          xgap: 20,
-          ygap: 20
+          xgap: 15,
+          ygap: 15
         }]}
         layout={{
           width:  chartWidth,
