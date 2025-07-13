@@ -61,7 +61,7 @@ function SalaryTrendByMonth() {
       tooltip: { mode: 'index', intersect: false }
     },
     scales: {
-      x: { title: { display: true, text: 'Month' } },
+      x: { title: { display: true, text: 'Month of hire' } },
       y: { beginAtZero: true, title: { display: true, text: 'Average Salary' } }
     }
   };
@@ -69,7 +69,7 @@ function SalaryTrendByMonth() {
   return (
    <Box sx={{ width: '100%', height: { xs: 300, md: 500 }}}>
       <Typography variant="h6" mb={2}>
-         New Hires Monthly Salaries Trend by Gender
+         New Hires Salaries Trend by Gender
       </Typography>
       <Line data={chartData} options={options} />
     </Box>

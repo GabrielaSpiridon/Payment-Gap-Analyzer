@@ -64,7 +64,7 @@ def gender_pay_gap_trends(request):
         m_list = salaries.get('Male', [])
         f_list = salaries.get('Female', [])
 
-        # calculează variatia medie și mediana variatiei absolut
+        # calculează variatia medie și mediana variatie absolut
         avg_gap = None
         med_gap = None
         if m_list and f_list:
@@ -73,10 +73,16 @@ def gender_pay_gap_trends(request):
             m_med = float(np.median(m_list))
             f_med = float(np.median(f_list))
 
-            # folosim valoare absolută a diferenței
-            avg_gap = abs(m_avg - f_avg) / m_avg * 100
-            med_gap = abs(m_med - f_med) / m_med * 100
-
+            # folosim valoare absolută a diferenței si tratam cazul in care avem un angajat
+                
+            base = max(m_avg, f_avg)
+            avg_gap = abs(m_avg - f_avg) / base * 100 if base != 0 else 0
+            med_base = max(m_med, f_med)
+            med_gap = abs(m_med - f_med) / med_base * 100 if med_base != 0 else 0
+        else:
+            # Dacă nu există ambele sexe, nu calc GPG 
+            avg_gap = 0
+            med_gap = 0
         # propagă ultima valoare cunoscută dacă valori lipsă
         if avg_gap is None and last_avg is not None:
             avg_gap = last_avg
