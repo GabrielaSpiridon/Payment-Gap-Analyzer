@@ -129,8 +129,8 @@ export default function GenderPayGapTrendsChart() {
 
   return (
       <Box>
-      <Typography variant="h6" mb={2}>
-        Gender Pay Gap Progress (GPG)
+      <Typography variant="h7" mb={2}>
+        Gender Pay Gap (GPG) Evolution 
       </Typography>
       <Box sx={{ width: '100%', height: { xs: 300, md: 500 } }}>
         <Line data={chartData} options={options} />
