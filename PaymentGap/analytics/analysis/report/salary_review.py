@@ -1,4 +1,4 @@
-from django.db.models import Avg
+from django.db.models import Avg,Count
 from analysis.models.employee import Employee
 from analysis.statistic.salary_by_gender_job_title import get_salary_by_gender_job_title
 
@@ -16,11 +16,14 @@ def get_job_title_salary_alerts(threshold: float = 5.0):
         avg_f = genders.get('Female', 0.0)
 
         # Calculăm media totală pentru job_name (toți angajații, indiferent de gen)
-        total_agg = Employee.objects\
-            .filter(id_job_title__job_title=job_name)\
-            .aggregate(avg=Avg('salary'))
-        avg_total = float(total_agg['avg'] or 0.0)
+        qs = Employee.objects.filter(id_job_title__job_title=job_name)
+        total_agg = qs.aggregate(avg=Avg('salary'), count=Count('id_employee'))
 
+        avg_total = float(total_agg['avg'] or 0.0)
+        employee_count = total_agg['count']
+        
+        if employee_count < 2:
+            continue
         # Procentele de diferență
         diff_m = (abs(avg_m - avg_total) / avg_total * 100) if avg_total else 0.0
         diff_f = (abs(avg_f - avg_total) / avg_total * 100) if avg_total else 0.0

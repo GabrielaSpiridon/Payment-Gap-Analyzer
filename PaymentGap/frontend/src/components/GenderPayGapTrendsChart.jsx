@@ -54,14 +54,14 @@ export default function GenderPayGapTrendsChart() {
         setChartData({
           labels,
           datasets: [
-            {
-              label: 'Target range ±5%',
-              data: targetBand,
-              fill: { target: 0 },
-              backgroundColor: 'rgba(255, 206, 86, 0.2)',
-              borderWidth: 0,
-              pointRadius: 0,
-            },
+            // {
+            //   label: 'Target range ±5%',
+            //   data: targetBand,
+            //   fill: { target: 0 },
+            //   backgroundColor: 'rgba(255, 206, 86, 0.2)',
+            //   borderWidth: 0,
+            //   pointRadius: 0,
+            // },
             {
               label: 'Average total remuneration GPG',
               data: avgTotal,
@@ -116,8 +116,10 @@ export default function GenderPayGapTrendsChart() {
     scales: {
       y: {
         title: { display: true, text: 'Gender pay gap (%)' },
-        min: 0,
-        max: 30,
+        beginAtZero: true, // Keeps 0 as baseline
+         ticks: {
+            stepSize: 5, // optional: makes it easy to read
+       },
       },
       x: {
         title: { display: true, text: 'Year' }
