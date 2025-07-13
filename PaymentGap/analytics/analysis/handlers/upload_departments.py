@@ -77,14 +77,15 @@ def insert_departments(df: pd.DataFrame, cursor) -> int:
             existing = cursor.fetchone()
             if existing:
                 # update if needed
-                cursor.execute(
-                    """
-                    UPDATE departments
-                       SET id_company = %s, department_name = %s
-                     WHERE id_department = %s
-                    """,
-                    (id_company, dept_name, existing[0])
-                )
+                # cursor.execute(
+                #     """
+                #     UPDATE departments
+                #        SET id_company = %s, department_name = %s
+                #      WHERE id_department = %s
+                #     """,
+                #     (id_company, dept_name, existing[0])
+                # )
+                pass
             else:
                 # insert new
                 cursor.execute(

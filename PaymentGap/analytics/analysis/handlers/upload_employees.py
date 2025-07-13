@@ -36,7 +36,18 @@ def insert_employees(df: pd.DataFrame, cursor) -> int:
     friendly_cmgr   = 'compensation_manager_email' in df.columns
 
     # 4) Converters
-    def safe_int(v):   return int(v) if pd.notnull(v) else None
+    def safe_int(v):
+        if pd.isnull(v):
+            return None
+        if isinstance(v, str):
+            v = v.strip()
+            if v == '':
+                return None
+        try:
+            return int(v)
+        except (ValueError, TypeError):
+            return None
+
     def safe_float(v): return float(v) if pd.notnull(v) else None
     def to_date(v):
         if pd.isnull(v): return None
