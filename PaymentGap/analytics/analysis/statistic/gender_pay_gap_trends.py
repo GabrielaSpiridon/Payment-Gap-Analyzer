@@ -64,7 +64,7 @@ def gender_pay_gap_trends(request):
         m_list = salaries.get('Male', [])
         f_list = salaries.get('Female', [])
 
-        # calculează avg și median absolut
+        # calculează variatia medie și mediana variatiei absolut
         avg_gap = None
         med_gap = None
         if m_list and f_list:

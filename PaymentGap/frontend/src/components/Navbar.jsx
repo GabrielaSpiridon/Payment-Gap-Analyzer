@@ -27,8 +27,8 @@ function Navbar({ isAuthenticated, onLogout }) {
   const navItems = isAuthenticated
     ? [
         { label: 'Home Page', to: '/homepage' },
-        { label: 'Report Page', to: '/report' },
         { label: 'Chart Dashboard', to: '/dashboard' },
+        { label: 'Report Page', to: '/report' },
         { label: 'Import Excel', to: '/import' },
         { label: 'Employees', to: '/employees' },
         { label: 'Logout', action: onLogout, color: 'error' },
