@@ -36,7 +36,7 @@ Aplicația folosește o arhitectură modernă de tip **Microservices/Hybrid Back
 
 ### 1. Clonarea proiectului
 ```bash
-git clone [https://github.com/GabrielaSpiridon/GustoHub.git](https://github.com/GabrielaSpiridon/GustoHub.git)
+git clone [https://github.com/GabrielaSpiridon/Payment-Gap-Analyzer.git](https://github.com/GabrielaSpiridon/Payment-Gap-Analyzer.git)
 cd GustoHub
 ```
 ### 2. Configurare Backend Django (Analiza de date)
