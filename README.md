@@ -1,8 +1,8 @@
-# Payment Gap Analyzer 📊
+# Payment Gap Analyzer 
 
 **Payment Gap Analyzer** este o platformă digitală avansată dedicată organizațiilor mici și mijlocii (IMM), concepută pentru a identifica, analiza și raporta discrepanțele salariale de gen. Proiectul oferă un suport decizional bazat pe date, asigurând conformitatea cu **Directiva (UE) 2023/970** privind transparența salarială.
 
-## 🚀 Funcționalități Principale
+## Funcționalități Principale
 
 * **Import Automat de Date:** Încărcare rapidă a datelor angajaților prin fișiere Excel (format `.xlsx`).
 * **Dashboard Interactiv:** Vizualizarea indicatorilor cheie (KPIs) precum media salarială pe gen, departament și nivel de experiență (senioritate).
@@ -10,7 +10,7 @@
 * **Rapoarte de Conformitate:** Generarea de statistici necesare pentru audituri și raportări oficiale conform normelor europene.
 * **Sistem de Notificări:** Integrare cu servicii de mail pentru alerte privind inechitățile detectate.
 
-## 🛠️ Arhitectura Tehnică
+## Arhitectura Tehnică
 
 Aplicația folosește o arhitectură modernă de tip **Microservices/Hybrid Backend**, optimizată pentru procesarea datelor:
 
