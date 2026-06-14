@@ -1,70 +1,75 @@
-# Payment Gap Analyzer 
+# Payment Gap Analyzer
+> An Enterprise-Grade Salary Equity & Compliance Analytics Platform for SMEs.
 
-**Payment Gap Analyzer** este o platformă digitală avansată dedicată organizațiilor mici și mijlocii (IMM), concepută pentru a identifica, analiza și raporta discrepanțele salariale de gen. Proiectul oferă un suport decizional bazat pe date, asigurând conformitatea cu **Directiva (UE) 2023/970** privind transparența salarială.
+## 📌 Project Overview
+The **Payment Gap Analyzer** is a comprehensive software solution engineered to help Small and Medium-sized Enterprises (SMEs) monitor, analyze, and correct internal salary discrepancies. Built to address modern regulatory compliance (e.g., EU pay transparency directives) and promote organizational equity, the system ingests raw HR data, processes it through statistical models, and visualizes actionable insights regarding gender, age, experience, and departmental pay gaps.
 
-## Funcționalități Principale
+Unlike standard monolithic applications, this project demonstrates a modern, decoupled architecture by separating the web API gateway from the heavy data-processing analytics engine.
 
-* **Import Automat de Date:** Încărcare rapidă a datelor angajaților prin fișiere Excel (format `.xlsx`).
-* **Dashboard Interactiv:** Vizualizarea indicatorilor cheie (KPIs) precum media salarială pe gen, departament și nivel de experiență (senioritate).
-* **Analiză Comparativă:** Identificarea automată a rolurilor (Job Titles) unde există diferențe salariale nejustificate.
-* **Rapoarte de Conformitate:** Generarea de statistici necesare pentru audituri și raportări oficiale conform normelor europene.
-* **Sistem de Notificări:** Integrare cu servicii de mail pentru alerte privind inechitățile detectate.
+---
 
-## Arhitectura Tehnică
+## 🏗️ Architecture & Technical Stack
 
-Aplicația folosește o arhitectură modernă de tip **Microservices/Hybrid Backend**, optimizată pentru procesarea datelor:
+The system utilizes a distributed 3-tier architecture, ensuring separation of concerns between user interface, business logic, and intensive data processing.
 
-### **Frontend**
-* **React.js:** Interfață utilizator responsivă, modulară și dinamică.
-* **Chart.js:** Biblioteca utilizată pentru randarea graficelor statistice.
+| Component / Layer | Technology | Engineering Purpose |
+| :--- | :--- | :--- |
+| **Frontend** | React, Vite, Material UI, PrimeReact | Responsive, component-based SPA delivering interactive data visualizations (Chart.js) and complex data tables. |
+| **Backend Gateway** | Node.js, Express.js, JWT, Multer | Central API handling routing, secure authentication (2FA), file upload ingestion, and request validation. |
+| **Analytics Engine** | Python, Django, Pandas | Dedicated microservice for processing large Excel datasets, cleaning data, and executing statistical algorithms. |
+| **Database** | MySQL / MariaDB | Relational storage ensuring data integrity for employee records, organizational structures, and salary histories. |
 
-### **Backend**
-* **Node.js & Express:** Gestionează fluxul principal al aplicației, autentificarea utilizatorilor și managementul fișierelor.
-* **Django (Python):** Engine-ul de procesare a datelor, utilizat pentru calculul indicatorilor statistici complexi.
+---
 
-### **Bază de Date & Instrumente**
-* **PostgreSQL / SQLite:** Stocarea securizată a datelor organizaționale.
-* **Pandas (Python):** Utilizat pentru parsarea, curățarea și analiza datelor din Excel.
-* **Nodemailer:** Serviciu pentru expedierea notificărilor automate.
+## 🚀 Core Features & Engineering Highlights
 
-##  Instalare și Configurare
+### 1. Robust Data Ingestion Pipeline
+* **Batch Processing:** Utilizes `Multer` on the Node.js gateway to securely receive multi-file Excel uploads.
+* **Data Transformation:** Forwards raw files to the Python/Django service where `Pandas` is used to validate schemas, normalize edge cases (e.g., gender string variations), and persist clean data to the MySQL database.
 
-### Pre-cerințe
-* Node.js (v14+)
-* Python (3.8+)
-* npm (sau yarn)
+### 2. Advanced Statistical Analytics
+* **Dynamic Grouping:** Calculates mean, median, and standard deviation across dynamically selected cohorts (e.g., calculating average salary by gender partitioned by seniority brackets).
+* **Interactive Dashboards:** Translates complex JSON datasets from the backend into responsive `Chart.js` visualizations (pie charts, stacked bars) directly in the browser.
 
-### 1. Clonarea proiectului
+### 3. Enterprise-Grade Security
+* **Authentication:** Stateless authentication using JWT combined with Email-based Two-Factor Authentication (2FA) via `Nodemailer`.
+* **Access Control:** Strict Role-Based Access Control (RBAC) isolating privileges between HR personnel, Managers, and System Administrators.
+* **Threat Mitigation:** Implemented strict CORS policies, payload validation via `express-validator`, bcrypt password hashing, and API rate limiting to prevent brute-force and DDoS attacks.
+
+---
+
+## 📊 Sample Data Processing Flow
+
+The following sequence illustrates how the system handles a complex reporting request without blocking the main thread:
+
+1. **Client Request:** Authenticated HR user requests a "Gender Pay Gap by Seniority" report via the React UI.
+2. **API Gateway:** Node.js intercepts the request, validates the JWT, and forwards the parameters to the Python Analytics Engine.
+3. **Data Aggregation:** Django queries the MySQL database, utilizing aggregation functions (e.g., `ExtractYear`, `Avg`) to compute the exact statistical distribution.
+4. **Data Delivery:** The structured payload is returned through the Node.js gateway to the React frontend, where it is instantly rendered into an interactive chart.
+
+---
+
+## ⚙️ Setup & Installation
+
+**Prerequisites:** Node.js (v16+), Python (3.9+), MySQL Server.
+
+### Backend (Node.js API) 
 ```bash
-git clone [https://github.com/GabrielaSpiridon/Payment-Gap-Analyzer.git](https://github.com/GabrielaSpiridon/Payment-Gap-Analyzer.git)
-cd GustoHub
-```
-### 2. Configurare Backend Django (Analiza de date)
-```bash
-# Instalare dependențe Python
-pip install django pandas openpyxl
-pip install -r requirements.txt
-
-# Migrare bază de date și pornire server
-python manage.py migrate
-python manage.py runserver
-```
-
-### 3. Configurare Backend Node.js & Frontend
-```bash
-# Instalare dependențe Node
+cd backend
 npm install
-
-# Pornire server
-node server.js
+npm run start
 ```
-##  Obiectivele Proiectului
 
-Implementarea soluției **Payment Gap Analyzer** vizează atingerea următoarelor obiective strategice și operaționale:
+### Analytics Engine (Python/Django)
+```bash
+cd analytics
+pip install -r requirements.txt
+python manage.py runserver 8000
+````
 
-* **Monitorizarea Echității Salariale:** Oferă o imagine clară asupra modului în care sunt remunerați angajații, eliminând subiectivismul din procesul de analiză.
-* **Conformitate cu Directivele Europene:** Alinierea organizației la cerințele **Directivei (UE) 2023/970**, pregătind terenul pentru transparența salarială obligatorie.
-* **Suport pentru Decizii HR Informate:** Transformă datele brute în indicatori vizuali (KPIs), permițând managerilor să ia decizii bazate pe dovezi, nu pe presupuneri.
-* **Transparența Sistemului de Salarizare:** Creșterea încrederii angajaților prin demonstrarea unui angajament ferm față de egalitatea de șanse.
-* **Pregătirea pentru Audituri:** Facilitarea generării rapide de rapoarte și statistici solicitate de autorități sau de procesele de audit extern.
-* **Accesibilitate pentru IMM-uri:** Furnizarea unui instrument performant, dar ușor de utilizat, care nu necesită infrastructuri IT complexe sau bugete masive.
+### Frontend (React/Vite)
+```bash
+cd frontend
+npm install
+npm run dev
+```
